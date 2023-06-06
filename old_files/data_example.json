@@ -1,0 +1,68 @@
+[
+  {
+    "chat_id": 1234,
+    "places": [
+      {
+        "id": 1,
+        "name": "Акроритм",
+        "address": "ул. тутуту"
+      },
+      {
+        "id": 2,
+        "name": "Динамо",
+        "address": "ул. тутуту2"
+      }
+    ],
+    "trains_schedule": [
+      {
+        "day": "Пн",
+        "type": "Гимнастика/акробатика",
+        "place": 1,
+        "time": "19.30"
+      }
+    ],
+    "memes": [
+      "1.jpg", "2.jpg", "3.jpg"
+    ],
+    "poll_structure": ["yes", "maybe", "no", "hater"],
+    "answer_variants": {
+      "yes": ["конечно", "да!", "yep"],
+      "maybe": ["пока хз", "нахожусь в раздумьях", "maybe"],
+      "no": [";(", "неправильный ответ", "сегодня вынужден расстроить игоря", "неа("],
+      "hater": ["<игорь всегда добавлял 4ый вариант ответа>"]
+    },
+    "schedule_edits": [
+      {
+        "type": "move",
+        "name": "Тренировка переносится",
+        "old_date": "19.04.2020",
+        "old_time":  "19.30",
+        "old_place": 1,
+        "new_date":  "18.04.2020",
+        "new_time": "19.30",
+        "new_place":  2
+      },
+      {
+        "type": "remove",
+        "name": "Тренировка отменяется",
+        "old_date": "19.04.2020",
+        "old_time":  "19.30",
+        "old_place": 1,
+        "new_date":  "",
+        "new_time": "",
+        "new_place":  ""
+      },
+      {
+        "type": "add",
+        "name": "Внеплановая тренировка",
+        "old_date": "",
+        "old_time":  "",
+        "old_place": "",
+        "new_date":  "19.04.2020",
+        "new_time": "19.30",
+        "new_place": 2
+
+      }
+    ]
+  }
+]

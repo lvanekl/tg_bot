@@ -1,0 +1,428 @@
+2023-06-06 22:42:52,338 ERROR DB.new_chat() missing 1 required positional argument: 'telegram_chat_id'
+2023-06-06 22:43:51,253 ERROR DB.new_chat() missing 1 required positional argument: 'self'
+2023-06-06 22:46:43,620 ERROR parameters are of unsupported type
+2023-06-06 22:46:58,252 ERROR parameters are of unsupported type
+2023-06-06 22:48:41,940 INFO \u0423\u0441\u043f\u0435\u0448\u043d\u043e \u043e\u0442\u0440\u0430\u0431\u043e\u0442\u0430\u043b\u0430 \u0444\u0443\u043d\u043a\u0446\u0438\u044f <function DB.new_chat at 0x000002027AF0AB60> c \u043f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u0430\u043c\u0438 ((<db_class.DB object at 0x000002027AC5BCD0>,), {'telegram_chat_id': 1111111})
+2023-06-06 22:51:24,098 ERROR UNIQUE constraint failed: chat.telegram_chat_id
+2023-06-06 22:51:24,098 WARNING Функция <function DB.new_chat at 0x000001A2B450AB60> не сработала c параметрами ((<db_class.DB object at 0x000001A2B425BCD0>,), {'telegram_chat_id': 1111111})
+2023-06-06 22:52:12,233 INFO Успешно отработала функция <function DB.new_chat at 0x000001E2034CAAC0> c параметрами ((<db_class.DB object at 0x000001E202F5BCD0>,), {'telegram_chat_id': 1111111})
+2023-06-06 23:40:52,686 INFO Успешно отработала функция <function DB.new_chat at 0x0000014BB8706480> c параметрами ((<db_class.DB object at 0x0000014BB845BD10>,), {'telegram_chat_id': 1111111})
+2023-06-06 23:40:52,692 INFO Успешно отработала функция <function DB.new_chat at 0x0000014BB8706480> c параметрами ((<db_class.DB object at 0x0000014BB845BD10>,), {'telegram_chat_id': 2222222})
+2023-06-06 23:40:52,703 ERROR near "FROM": syntax error
+2023-06-06 23:40:52,703 WARNING Функция <function DB.get_gyms at 0x0000014BB87065C0> не сработала c параметрами ((<db_class.DB object at 0x0000014BB845BD10>,), {'telegram_chat_id': 1111111})
+2023-06-06 23:40:52,704 ERROR near "FROM": syntax error
+2023-06-06 23:40:52,704 WARNING Функция <function DB.get_gyms at 0x0000014BB87065C0> не сработала c параметрами ((<db_class.DB object at 0x0000014BB845BD10>,), {'telegram_chat_id': 2222222})
+2023-06-06 23:41:36,372 ERROR UNIQUE constraint failed: chat.telegram_chat_id
+2023-06-06 23:41:36,372 WARNING Функция <function DB.new_chat at 0x000001CE4B906480> не сработала c параметрами ((<db_class.DB object at 0x000001CE4B8C9150>,), {'telegram_chat_id': 1111111})
+2023-06-06 23:42:25,348 ERROR UNIQUE constraint failed: chat.telegram_chat_id
+2023-06-06 23:42:25,348 WARNING Функция <function DB.new_chat at 0x000001C116306520> не сработала c параметрами ((<db_class.DB object at 0x000001C11605BD10>,), {'telegram_chat_id': 1111111})
+2023-06-06 23:42:25,348 ERROR UNIQUE constraint failed: chat.telegram_chat_id
+2023-06-06 23:42:25,349 WARNING Функция <function DB.new_chat at 0x000001C116306520> не сработала c параметрами ((<db_class.DB object at 0x000001C11605BD10>,), {'telegram_chat_id': 2222222})
+2023-06-06 23:42:25,349 ERROR near "FROM": syntax error
+2023-06-06 23:42:25,349 WARNING Функция <function DB.get_gyms at 0x000001C116306660> не сработала c параметрами ((<db_class.DB object at 0x000001C11605BD10>,), {'telegram_chat_id': 1111111})
+2023-06-06 23:42:25,349 ERROR near "FROM": syntax error
+2023-06-06 23:42:25,349 WARNING Функция <function DB.get_gyms at 0x000001C116306660> не сработала c параметрами ((<db_class.DB object at 0x000001C11605BD10>,), {'telegram_chat_id': 2222222})
+2023-06-06 23:42:41,308 INFO Успешно отработала функция <function DB.new_chat at 0x000001D1608C6480> c параметрами ((<db_class.DB object at 0x000001D160889090>,), {'telegram_chat_id': 1111111})
+2023-06-06 23:42:41,313 INFO Успешно отработала функция <function DB.new_chat at 0x000001D1608C6480> c параметрами ((<db_class.DB object at 0x000001D160889090>,), {'telegram_chat_id': 2222222})
+2023-06-06 23:42:41,318 ERROR near "FROM": syntax error
+2023-06-06 23:42:41,318 WARNING Функция <function DB.get_gyms at 0x000001D1608C65C0> не сработала c параметрами ((<db_class.DB object at 0x000001D160889090>,), {'telegram_chat_id': 1111111})
+2023-06-06 23:42:41,318 ERROR near "FROM": syntax error
+2023-06-06 23:42:41,318 WARNING Функция <function DB.get_gyms at 0x000001D1608C65C0> не сработала c параметрами ((<db_class.DB object at 0x000001D160889090>,), {'telegram_chat_id': 2222222})
+2023-06-06 23:43:54,893 INFO Успешно отработала функция <function DB.new_chat at 0x0000023A05F06520> c параметрами ((<db_class.DB object at 0x0000023A05C5BD10>,), {'telegram_chat_id': 1111111})
+2023-06-06 23:43:54,898 INFO Успешно отработала функция <function DB.new_chat at 0x0000023A05F06520> c параметрами ((<db_class.DB object at 0x0000023A05C5BD10>,), {'telegram_chat_id': 2222222})
+2023-06-06 23:43:54,903 INFO Успешно отработала функция <function DB.get_gyms at 0x0000023A05F06660> c параметрами ((<db_class.DB object at 0x0000023A05C5BD10>,), {'telegram_chat_id': 1111111})
+2023-06-06 23:43:54,903 INFO Успешно отработала функция <function DB.get_gyms at 0x0000023A05F06660> c параметрами ((<db_class.DB object at 0x0000023A05C5BD10>,), {'telegram_chat_id': 2222222})
+2023-06-06 23:48:19,434 INFO Успешно отработала функция <function DB.clear_all_tables at 0x0000026EFBD065C0> c параметрами ((<db_class.DB object at 0x0000026EFBA5BD10>,), {})
+2023-06-06 23:48:19,441 INFO Успешно отработала функция <function DB.new_chat at 0x0000026EFBD06700> c параметрами ((<db_class.DB object at 0x0000026EFBA5BD10>,), {'telegram_chat_id': 1111111})
+2023-06-06 23:48:19,446 INFO Успешно отработала функция <function DB.new_chat at 0x0000026EFBD06700> c параметрами ((<db_class.DB object at 0x0000026EFBA5BD10>,), {'telegram_chat_id': 2222222})
+2023-06-06 23:48:19,452 INFO Успешно отработала функция <function DB.get_gyms at 0x0000026EFBD06840> c параметрами ((<db_class.DB object at 0x0000026EFBA5BD10>,), {'telegram_chat_id': 1111111})
+2023-06-06 23:48:19,452 INFO Успешно отработала функция <function DB.get_gyms at 0x0000026EFBD06840> c параметрами ((<db_class.DB object at 0x0000026EFBA5BD10>,), {'telegram_chat_id': 2222222})
+2023-06-06 23:48:23,003 INFO Успешно отработала функция <function DB.clear_all_tables at 0x00000197BFD2A520> c параметрами ((<db_class.DB object at 0x00000197BFA7BD10>,), {})
+2023-06-06 23:48:23,009 INFO Успешно отработала функция <function DB.new_chat at 0x00000197BFD2A660> c параметрами ((<db_class.DB object at 0x00000197BFA7BD10>,), {'telegram_chat_id': 1111111})
+2023-06-06 23:48:23,015 INFO Успешно отработала функция <function DB.new_chat at 0x00000197BFD2A660> c параметрами ((<db_class.DB object at 0x00000197BFA7BD10>,), {'telegram_chat_id': 2222222})
+2023-06-06 23:48:23,019 INFO Успешно отработала функция <function DB.get_gyms at 0x00000197BFD2A7A0> c параметрами ((<db_class.DB object at 0x00000197BFA7BD10>,), {'telegram_chat_id': 1111111})
+2023-06-06 23:48:23,020 INFO Успешно отработала функция <function DB.get_gyms at 0x00000197BFD2A7A0> c параметрами ((<db_class.DB object at 0x00000197BFA7BD10>,), {'telegram_chat_id': 2222222})
+2023-06-07 01:11:12,886 ERROR DB.add_schedule() got an unexpected keyword argument 'weekday'
+2023-06-07 01:11:12,886 WARNING Функция <function DB.add_schedule at 0x000001DA49B019E0> не сработала c параметрами ((<db_class.DB object at 0x000001DA49A60450>,), {'telegram_chat_id': 1111111, 'weekday': 1, 'sport': 's1', 'gym': 38, 'time': '19.30'})
+2023-06-07 01:11:12,886 ERROR DB.add_schedule() got an unexpected keyword argument 'weekday'
+2023-06-07 01:11:12,887 WARNING Функция <function DB.add_schedule at 0x000001DA49B019E0> не сработала c параметрами ((<db_class.DB object at 0x000001DA49A60450>,), {'telegram_chat_id': 1111111, 'weekday': 5, 'sport': 's2', 'gym': 40, 'time': '19.30'})
+2023-06-07 01:11:12,887 ERROR DB.add_schedule() got an unexpected keyword argument 'weekday'
+2023-06-07 01:11:12,887 WARNING Функция <function DB.add_schedule at 0x000001DA49B019E0> не сработала c параметрами ((<db_class.DB object at 0x000001DA49A60450>,), {'telegram_chat_id': 1111111, 'weekday': 7, 'sport': 's3', 'gym': 41, 'time': '19.30'})
+2023-06-07 01:11:12,887 ERROR DB.add_schedule() got an unexpected keyword argument 'weekday'
+2023-06-07 01:11:12,887 WARNING Функция <function DB.add_schedule at 0x000001DA49B019E0> не сработала c параметрами ((<db_class.DB object at 0x000001DA49A60450>,), {'telegram_chat_id': 1111111, 'weekday': 2, 'sport': 's1', 'gym': 38, 'time': '19.30'})
+2023-06-07 01:24:09,761 ERROR DB.edit_schedule() got an unexpected keyword argument 'shedule_id'
+2023-06-07 01:24:09,761 WARNING Функция <function DB.edit_schedule at 0x00000228DA321DA0> не сработала c параметрами ((<db_class.DB object at 0x00000228DA280790>,), {'shedule_id': 33, 'weekday': 2, 'sport': None, 'gym': 75, 'time': None})
+2023-06-07 01:24:09,761 ERROR DB.edit_schedule() got an unexpected keyword argument 'shedule_id'
+2023-06-07 01:24:09,761 WARNING Функция <function DB.edit_schedule at 0x00000228DA321DA0> не сработала c параметрами ((<db_class.DB object at 0x00000228DA280790>,), {'shedule_id': 34, 'weekday': None, 'sport': 'None', 'gym': None, 'time': '19.31'})
+2023-06-07 01:24:09,761 ERROR DB.edit_schedule() got an unexpected keyword argument 'shedule_id'
+2023-06-07 01:24:09,761 WARNING Функция <function DB.edit_schedule at 0x00000228DA321DA0> не сработала c параметрами ((<db_class.DB object at 0x00000228DA280790>,), {'shedule_id': 35, 'weekday': 6, 'sport': 'None', 'gym': 77, 'time': '19.32'})
+2023-06-07 01:24:09,762 ERROR DB.edit_schedule() got an unexpected keyword argument 'shedule_id'
+2023-06-07 01:24:09,762 WARNING Функция <function DB.edit_schedule at 0x00000228DA321DA0> не сработала c параметрами ((<db_class.DB object at 0x00000228DA280790>,), {'shedule_id': 33, 'weekday': None, 'sport': None, 'gym': None, 'time': None})
+2023-06-07 01:24:27,444 ERROR near ",": syntax error
+2023-06-07 01:24:27,445 WARNING Функция <function DB.edit_schedule at 0x000001692C111DA0> не сработала c параметрами ((<db_class.DB object at 0x000001692C070790>,), {'schedule_id': 37, 'weekday': 2, 'sport': None, 'gym': 79, 'time': None})
+2023-06-07 01:24:27,445 ERROR near ",": syntax error
+2023-06-07 01:24:27,445 WARNING Функция <function DB.edit_schedule at 0x000001692C111DA0> не сработала c параметрами ((<db_class.DB object at 0x000001692C070790>,), {'schedule_id': 38, 'weekday': None, 'sport': 'None', 'gym': None, 'time': '19.31'})
+2023-06-07 01:24:27,445 ERROR near ",": syntax error
+2023-06-07 01:24:27,445 WARNING Функция <function DB.edit_schedule at 0x000001692C111DA0> не сработала c параметрами ((<db_class.DB object at 0x000001692C070790>,), {'schedule_id': 39, 'weekday': 6, 'sport': 'None', 'gym': 81, 'time': '19.32'})
+2023-06-07 01:24:47,936 ERROR near ",": syntax error
+2023-06-07 01:24:47,936 WARNING Функция <function DB.edit_schedule at 0x000001B41F6C1DA0> не сработала c параметрами ((<db_class.DB object at 0x000001B41F620790>,), {'schedule_id': 41, 'weekday': 2, 'sport': None, 'gym': 83, 'time': None})
+2023-06-07 01:24:47,936 ERROR near ",": syntax error
+2023-06-07 01:24:47,936 WARNING Функция <function DB.edit_schedule at 0x000001B41F6C1DA0> не сработала c параметрами ((<db_class.DB object at 0x000001B41F620790>,), {'schedule_id': 42, 'weekday': None, 'sport': 'None', 'gym': None, 'time': '19.31'})
+2023-06-07 01:24:47,937 ERROR near ",": syntax error
+2023-06-07 01:24:47,937 WARNING Функция <function DB.edit_schedule at 0x000001B41F6C1DA0> не сработала c параметрами ((<db_class.DB object at 0x000001B41F620790>,), {'schedule_id': 43, 'weekday': 6, 'sport': 'None', 'gym': 85, 'time': '19.32'})
+2023-06-07 01:26:34,187 ERROR near ",": syntax error
+2023-06-07 01:26:34,187 WARNING Функция <function DB.edit_schedule at 0x0000021F0FD01DA0> не сработала c параметрами ((<db_class.DB object at 0x0000021F0FC60790>,), {'schedule_id': 45, 'weekday': 2, 'sport': None, 'gym': 87, 'time': None})
+2023-06-07 01:26:34,188 ERROR near ",": syntax error
+2023-06-07 01:26:34,188 WARNING Функция <function DB.edit_schedule at 0x0000021F0FD01DA0> не сработала c параметрами ((<db_class.DB object at 0x0000021F0FC60790>,), {'schedule_id': 46, 'weekday': None, 'sport': 'None', 'gym': None, 'time': '19.31'})
+2023-06-07 01:26:34,188 ERROR near ",": syntax error
+2023-06-07 01:26:34,188 WARNING Функция <function DB.edit_schedule at 0x0000021F0FD01DA0> не сработала c параметрами ((<db_class.DB object at 0x0000021F0FC60790>,), {'schedule_id': 47, 'weekday': 6, 'sport': 'None', 'gym': 89, 'time': '19.32'})
+2023-06-07 01:29:07,408 ERROR near ",": syntax error
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 122, in edit_schedule
+    self.cur.execute(f"UPDATE gym SET {edit_columns_str} WHERE id == ?", (schedule_id,))
+sqlite3.OperationalError: near ",": syntax error
+2023-06-07 01:29:07,412 WARNING Функция <function DB.edit_schedule at 0x000001470D6C5E40> не сработала c параметрами ((<db_class.DB object at 0x000001470D620790>,), {'schedule_id': 49, 'weekday': 2, 'sport': None, 'gym': 91, 'time': None})
+2023-06-07 01:29:07,412 ERROR near ",": syntax error
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 122, in edit_schedule
+    self.cur.execute(f"UPDATE gym SET {edit_columns_str} WHERE id == ?", (schedule_id,))
+sqlite3.OperationalError: near ",": syntax error
+2023-06-07 01:29:07,413 WARNING Функция <function DB.edit_schedule at 0x000001470D6C5E40> не сработала c параметрами ((<db_class.DB object at 0x000001470D620790>,), {'schedule_id': 50, 'weekday': None, 'sport': 'None', 'gym': None, 'time': '19.31'})
+2023-06-07 01:29:07,413 ERROR near ",": syntax error
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 122, in edit_schedule
+    self.cur.execute(f"UPDATE gym SET {edit_columns_str} WHERE id == ?", (schedule_id,))
+sqlite3.OperationalError: near ",": syntax error
+2023-06-07 01:29:07,413 WARNING Функция <function DB.edit_schedule at 0x000001470D6C5E40> не сработала c параметрами ((<db_class.DB object at 0x000001470D620790>,), {'schedule_id': 51, 'weekday': 6, 'sport': 'None', 'gym': 93, 'time': '19.32'})
+2023-06-07 01:29:56,011 ERROR near ",": syntax error
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 122, in edit_schedule
+    self.cur.execute(f"UPDATE gym SET {edit_columns_str} WHERE id == ?", (schedule_id,))
+sqlite3.OperationalError: near ",": syntax error
+2023-06-07 01:29:56,015 WARNING Функция <function DB.edit_schedule at 0x0000020D4FB05E40> не сработала c параметрами ((<db_class.DB object at 0x0000020D4FA60790>,), {'schedule_id': 53, 'weekday': 2, 'sport': None, 'gym': 95, 'time': None})
+2023-06-07 01:29:56,015 ERROR near ",": syntax error
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 122, in edit_schedule
+    self.cur.execute(f"UPDATE gym SET {edit_columns_str} WHERE id == ?", (schedule_id,))
+sqlite3.OperationalError: near ",": syntax error
+2023-06-07 01:29:56,015 WARNING Функция <function DB.edit_schedule at 0x0000020D4FB05E40> не сработала c параметрами ((<db_class.DB object at 0x0000020D4FA60790>,), {'schedule_id': 54, 'weekday': None, 'sport': 'None', 'gym': None, 'time': '19.31'})
+2023-06-07 01:29:56,016 ERROR near ",": syntax error
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 122, in edit_schedule
+    self.cur.execute(f"UPDATE gym SET {edit_columns_str} WHERE id == ?", (schedule_id,))
+sqlite3.OperationalError: near ",": syntax error
+2023-06-07 01:29:56,016 WARNING Функция <function DB.edit_schedule at 0x0000020D4FB05E40> не сработала c параметрами ((<db_class.DB object at 0x0000020D4FA60790>,), {'schedule_id': 55, 'weekday': 6, 'sport': 'None', 'gym': 97, 'time': '19.32'})
+2023-06-07 01:30:28,061 ERROR no such column: weekday
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 122, in edit_schedule
+    self.cur.execute(f"UPDATE gym SET {edit_columns_str} WHERE id == ?", (schedule_id,))
+sqlite3.OperationalError: no such column: weekday
+2023-06-07 01:30:28,065 WARNING Функция <function DB.edit_schedule at 0x00000149D9B05E40> не сработала c параметрами ((<db_class.DB object at 0x00000149D9A60790>,), {'schedule_id': 57, 'weekday': 2, 'sport': None, 'gym': 99, 'time': None})
+2023-06-07 01:30:28,066 ERROR no such column: None
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 122, in edit_schedule
+    self.cur.execute(f"UPDATE gym SET {edit_columns_str} WHERE id == ?", (schedule_id,))
+sqlite3.OperationalError: no such column: None
+2023-06-07 01:30:28,066 WARNING Функция <function DB.edit_schedule at 0x00000149D9B05E40> не сработала c параметрами ((<db_class.DB object at 0x00000149D9A60790>,), {'schedule_id': 58, 'weekday': None, 'sport': 'None', 'gym': None, 'time': '19.31'})
+2023-06-07 01:30:28,066 ERROR no such column: weekday
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 122, in edit_schedule
+    self.cur.execute(f"UPDATE gym SET {edit_columns_str} WHERE id == ?", (schedule_id,))
+sqlite3.OperationalError: no such column: weekday
+2023-06-07 01:30:28,067 WARNING Функция <function DB.edit_schedule at 0x00000149D9B05E40> не сработала c параметрами ((<db_class.DB object at 0x00000149D9A60790>,), {'schedule_id': 59, 'weekday': 6, 'sport': 'None', 'gym': 101, 'time': '19.32'})
+2023-06-07 01:31:30,893 ERROR no such column: weekday
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 122, in edit_schedule
+    self.cur.execute(f"UPDATE gym SET {edit_columns_str} WHERE id == ?", (schedule_id,))
+sqlite3.OperationalError: no such column: weekday
+2023-06-07 01:31:30,897 WARNING Функция <function DB.edit_schedule at 0x00000212B9505DA0> не сработала c параметрами ((<db_class.DB object at 0x00000212B9460850>,), {'schedule_id': 61, 'weekday': 2, 'sport': None, 'gym': 103, 'time': None})
+2023-06-07 01:31:30,898 ERROR no such column: sport
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 122, in edit_schedule
+    self.cur.execute(f"UPDATE gym SET {edit_columns_str} WHERE id == ?", (schedule_id,))
+sqlite3.OperationalError: no such column: sport
+2023-06-07 01:31:30,899 WARNING Функция <function DB.edit_schedule at 0x00000212B9505DA0> не сработала c параметрами ((<db_class.DB object at 0x00000212B9460850>,), {'schedule_id': 62, 'weekday': None, 'sport': 'None', 'gym': None, 'time': '19.31'})
+2023-06-07 01:31:30,899 ERROR no such column: weekday
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 122, in edit_schedule
+    self.cur.execute(f"UPDATE gym SET {edit_columns_str} WHERE id == ?", (schedule_id,))
+sqlite3.OperationalError: no such column: weekday
+2023-06-07 01:31:30,899 WARNING Функция <function DB.edit_schedule at 0x00000212B9505DA0> не сработала c параметрами ((<db_class.DB object at 0x00000212B9460850>,), {'schedule_id': 63, 'weekday': 6, 'sport': 'None', 'gym': 105, 'time': '19.32'})
+2023-06-07 01:35:15,976 ERROR no such column: weekday
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 122, in edit_schedule
+    self.cur.execute(f"UPDATE gym SET {edit_columns_str} WHERE id == ?", (schedule_id,))
+sqlite3.OperationalError: no such column: weekday
+2023-06-07 01:35:15,980 WARNING Функция <function DB.edit_schedule at 0x0000023EE7525E40> не сработала c параметрами ((<db_class.DB object at 0x0000023EE7480850>,), {'schedule_id': 65, 'weekday': 2, 'sport': None, 'gym': 107, 'time': None})
+2023-06-07 01:35:15,981 ERROR no such column: None
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 122, in edit_schedule
+    self.cur.execute(f"UPDATE gym SET {edit_columns_str} WHERE id == ?", (schedule_id,))
+sqlite3.OperationalError: no such column: None
+2023-06-07 01:35:15,981 WARNING Функция <function DB.edit_schedule at 0x0000023EE7525E40> не сработала c параметрами ((<db_class.DB object at 0x0000023EE7480850>,), {'schedule_id': 66, 'weekday': None, 'sport': 'None', 'gym': None, 'time': '19.31'})
+2023-06-07 01:35:15,981 ERROR no such column: weekday
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 122, in edit_schedule
+    self.cur.execute(f"UPDATE gym SET {edit_columns_str} WHERE id == ?", (schedule_id,))
+sqlite3.OperationalError: no such column: weekday
+2023-06-07 01:35:15,982 WARNING Функция <function DB.edit_schedule at 0x0000023EE7525E40> не сработала c параметрами ((<db_class.DB object at 0x0000023EE7480850>,), {'schedule_id': 67, 'weekday': 6, 'sport': 'None', 'gym': 109, 'time': '19.32'})
+2023-06-07 01:35:33,629 ERROR no such column: weekday
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 122, in edit_schedule
+    self.cur.execute(f"UPDATE gym SET {edit_columns_str} WHERE id == ?", (schedule_id,))
+sqlite3.OperationalError: no such column: weekday
+2023-06-07 01:35:33,633 WARNING Функция <function DB.edit_schedule at 0x0000024DFBEC5E40> не сработала c параметрами ((<db_class.DB object at 0x0000024DFBE20850>,), {'schedule_id': 69, 'weekday': 2, 'sport': None, 'gym': 111, 'time': None})
+2023-06-07 01:35:33,634 ERROR no such column: None
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 122, in edit_schedule
+    self.cur.execute(f"UPDATE gym SET {edit_columns_str} WHERE id == ?", (schedule_id,))
+sqlite3.OperationalError: no such column: None
+2023-06-07 01:35:33,634 WARNING Функция <function DB.edit_schedule at 0x0000024DFBEC5E40> не сработала c параметрами ((<db_class.DB object at 0x0000024DFBE20850>,), {'schedule_id': 70, 'weekday': None, 'sport': 'None', 'gym': None, 'time': '19.31'})
+2023-06-07 01:35:33,635 ERROR no such column: weekday
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 122, in edit_schedule
+    self.cur.execute(f"UPDATE gym SET {edit_columns_str} WHERE id == ?", (schedule_id,))
+sqlite3.OperationalError: no such column: weekday
+2023-06-07 01:35:33,635 WARNING Функция <function DB.edit_schedule at 0x0000024DFBEC5E40> не сработала c параметрами ((<db_class.DB object at 0x0000024DFBE20850>,), {'schedule_id': 71, 'weekday': 6, 'sport': 'None', 'gym': 113, 'time': '19.32'})
+2023-06-07 01:36:55,234 ERROR no such column: weekday
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 122, in edit_schedule
+    self.cur.execute(f"UPDATE gym SET {edit_columns_str} WHERE id == ?", (schedule_id,))
+sqlite3.OperationalError: no such column: weekday
+2023-06-07 01:36:55,238 WARNING Функция <function DB.edit_schedule at 0x00000283A0905E40> не сработала c параметрами ((<db_class.DB object at 0x00000283A0860850>,), {'schedule_id': 73, 'weekday': 2, 'sport': None, 'gym': 115, 'time': None})
+2023-06-07 01:36:55,239 ERROR no such column: None
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 122, in edit_schedule
+    self.cur.execute(f"UPDATE gym SET {edit_columns_str} WHERE id == ?", (schedule_id,))
+sqlite3.OperationalError: no such column: None
+2023-06-07 01:36:55,239 WARNING Функция <function DB.edit_schedule at 0x00000283A0905E40> не сработала c параметрами ((<db_class.DB object at 0x00000283A0860850>,), {'schedule_id': 74, 'weekday': None, 'sport': 'None', 'gym': None, 'time': '19.31'})
+2023-06-07 01:36:55,239 ERROR no such column: weekday
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 122, in edit_schedule
+    self.cur.execute(f"UPDATE gym SET {edit_columns_str} WHERE id == ?", (schedule_id,))
+sqlite3.OperationalError: no such column: weekday
+2023-06-07 01:36:55,240 WARNING Функция <function DB.edit_schedule at 0x00000283A0905E40> не сработала c параметрами ((<db_class.DB object at 0x00000283A0860850>,), {'schedule_id': 75, 'weekday': 6, 'sport': 'None', 'gym': 117, 'time': '19.32'})
+2023-06-07 01:37:20,566 ERROR no such column: weekday
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 122, in edit_schedule
+    self.cur.execute(f"UPDATE gym SET {edit_columns_str} WHERE id == ?", (schedule_id,))
+sqlite3.OperationalError: no such column: weekday
+2023-06-07 01:37:20,570 WARNING Функция <function DB.edit_schedule at 0x00000206134C5E40> не сработала c параметрами ((<db_class.DB object at 0x0000020613420850>,), {'schedule_id': 77, 'weekday': 2, 'sport': None, 'gym': 119, 'time': None})
+2023-06-07 01:37:20,571 ERROR no such column: Non
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 122, in edit_schedule
+    self.cur.execute(f"UPDATE gym SET {edit_columns_str} WHERE id == ?", (schedule_id,))
+sqlite3.OperationalError: no such column: Non
+2023-06-07 01:37:20,571 WARNING Функция <function DB.edit_schedule at 0x00000206134C5E40> не сработала c параметрами ((<db_class.DB object at 0x0000020613420850>,), {'schedule_id': 78, 'weekday': None, 'sport': 'Non', 'gym': None, 'time': '19.31'})
+2023-06-07 01:37:20,572 ERROR no such column: weekday
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 122, in edit_schedule
+    self.cur.execute(f"UPDATE gym SET {edit_columns_str} WHERE id == ?", (schedule_id,))
+sqlite3.OperationalError: no such column: weekday
+2023-06-07 01:37:20,572 WARNING Функция <function DB.edit_schedule at 0x00000206134C5E40> не сработала c параметрами ((<db_class.DB object at 0x0000020613420850>,), {'schedule_id': 79, 'weekday': 6, 'sport': 'Non', 'gym': 121, 'time': '19.32'})
+2023-06-07 01:38:43,375 ERROR int() argument must be a string, a bytes-like object or a real number, not 'NoneType'
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 123, in edit_schedule
+    + 'тип, ' * int(sport)
+                ^^^^^^^^^^
+TypeError: int() argument must be a string, a bytes-like object or a real number, not 'NoneType'
+2023-06-07 01:38:43,379 WARNING Функция <function DB.edit_schedule at 0x00000179B68C5E40> не сработала c параметрами ((<db_class.DB object at 0x00000179B6820850>,), {'schedule_id': 81, 'weekday': 2, 'sport': None, 'gym': 123, 'time': None})
+2023-06-07 01:38:43,380 ERROR no such column: Non
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 121, in edit_schedule
+    self.cur.execute(f"UPDATE schedule SET {edit_columns_str} WHERE id == ?", (schedule_id,))
+sqlite3.OperationalError: no such column: Non
+2023-06-07 01:38:43,380 WARNING Функция <function DB.edit_schedule at 0x00000179B68C5E40> не сработала c параметрами ((<db_class.DB object at 0x00000179B6820850>,), {'schedule_id': 82, 'weekday': None, 'sport': 'Non', 'gym': None, 'time': '19.31'})
+2023-06-07 01:38:43,381 ERROR no such column: Non
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 121, in edit_schedule
+    self.cur.execute(f"UPDATE schedule SET {edit_columns_str} WHERE id == ?", (schedule_id,))
+sqlite3.OperationalError: no such column: Non
+2023-06-07 01:38:43,381 WARNING Функция <function DB.edit_schedule at 0x00000179B68C5E40> не сработала c параметрами ((<db_class.DB object at 0x00000179B6820850>,), {'schedule_id': 83, 'weekday': 6, 'sport': 'Non', 'gym': 125, 'time': '19.32'})
+2023-06-07 01:39:00,077 ERROR int() argument must be a string, a bytes-like object or a real number, not 'NoneType'
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 124, in edit_schedule
+    + 'тип, ' * int(sport)
+                ^^^^^^^^^^
+TypeError: int() argument must be a string, a bytes-like object or a real number, not 'NoneType'
+2023-06-07 01:39:00,081 WARNING Функция <function DB.edit_schedule at 0x000001E807905E40> не сработала c параметрами ((<db_class.DB object at 0x000001E807860850>,), {'schedule_id': 85, 'weekday': 2, 'sport': None, 'gym': 127, 'time': None})
+2023-06-07 01:39:00,082 ERROR no such column: Non
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 122, in edit_schedule
+    self.cur.execute(f"UPDATE schedule SET {edit_columns_str} WHERE id == ?", (schedule_id,))
+sqlite3.OperationalError: no such column: Non
+2023-06-07 01:39:00,082 WARNING Функция <function DB.edit_schedule at 0x000001E807905E40> не сработала c параметрами ((<db_class.DB object at 0x000001E807860850>,), {'schedule_id': 86, 'weekday': None, 'sport': 'Non', 'gym': None, 'time': '19.31'})
+2023-06-07 01:39:00,083 ERROR no such column: Non
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 122, in edit_schedule
+    self.cur.execute(f"UPDATE schedule SET {edit_columns_str} WHERE id == ?", (schedule_id,))
+sqlite3.OperationalError: no such column: Non
+2023-06-07 01:39:00,083 WARNING Функция <function DB.edit_schedule at 0x000001E807905E40> не сработала c параметрами ((<db_class.DB object at 0x000001E807860850>,), {'schedule_id': 87, 'weekday': 6, 'sport': 'Non', 'gym': 129, 'time': '19.32'})
+2023-06-07 01:40:48,490 ERROR int() argument must be a string, a bytes-like object or a real number, not 'NoneType'
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 124, in edit_schedule
+    + 'тип, ' * int(sport)
+                ^^^^^^^^^^
+TypeError: int() argument must be a string, a bytes-like object or a real number, not 'NoneType'
+2023-06-07 01:40:48,495 WARNING Функция <function DB.edit_schedule at 0x000001B274505DA0> не сработала c параметрами ((<db_class.DB object at 0x000001B274460850>,), {'schedule_id': 89, 'weekday': 2, 'sport': None, 'gym': 131, 'time': None})
+2023-06-07 01:40:48,497 ERROR int() argument must be a string, a bytes-like object or a real number, not 'NoneType'
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 123, in edit_schedule
+    return ("Рапсисание изменено. Отредактированы следующие поля: " + 'день недели, ' * int(weekday)
+                                                                                        ^^^^^^^^^^^^
+TypeError: int() argument must be a string, a bytes-like object or a real number, not 'NoneType'
+2023-06-07 01:40:48,497 WARNING Функция <function DB.edit_schedule at 0x000001B274505DA0> не сработала c параметрами ((<db_class.DB object at 0x000001B274460850>,), {'schedule_id': 90, 'weekday': None, 'sport': 'Non', 'gym': None, 'time': '19.31'})
+2023-06-07 01:40:48,499 ERROR invalid literal for int() with base 10: 'Non'
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 124, in edit_schedule
+    + 'тип, ' * int(sport)
+                ^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'Non'
+2023-06-07 01:40:48,499 WARNING Функция <function DB.edit_schedule at 0x000001B274505DA0> не сработала c параметрами ((<db_class.DB object at 0x000001B274460850>,), {'schedule_id': 91, 'weekday': 6, 'sport': 'Non', 'gym': 133, 'time': '19.32'})
+2023-06-07 01:41:19,742 ERROR database is locked
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 38, in clear_all_tables
+    self.cur.execute("DELETE FROM chat")
+sqlite3.OperationalError: database is locked
+2023-06-07 01:41:19,745 WARNING Функция <function DB.clear_all_tables at 0x0000016D78AC5260> не сработала c параметрами ((<db_class.DB object at 0x0000016D78A20850>,), {})
+2023-06-07 01:41:25,327 ERROR database is locked
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 49, in new_chat
+    self.cur.execute("INSERT INTO chat (telegram_chat_id, welcome_meme) VALUES (?, ?)",
+sqlite3.OperationalError: database is locked
+2023-06-07 01:41:25,327 WARNING Функция <function DB.new_chat at 0x0000016D78AC53A0> не сработала c параметрами ((<db_class.DB object at 0x0000016D78A20850>,), {'telegram_chat_id': 1111111})
+2023-06-07 01:41:41,022 ERROR int() argument must be a string, a bytes-like object or a real number, not 'NoneType'
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 124, in edit_schedule
+    + 'тип, ' * int(sport)
+                ^^^^^^^^^^
+TypeError: int() argument must be a string, a bytes-like object or a real number, not 'NoneType'
+2023-06-07 01:41:41,026 WARNING Функция <function DB.edit_schedule at 0x000001AFF1F01D00> не сработала c параметрами ((<db_class.DB object at 0x000001AFF1E60850>,), {'schedule_id': 93, 'weekday': 2, 'sport': None, 'gym': 135, 'time': None})
+2023-06-07 01:41:41,028 ERROR int() argument must be a string, a bytes-like object or a real number, not 'NoneType'
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 123, in edit_schedule
+    return ("Рапсисание изменено. Отредактированы следующие поля: " + 'день недели, ' * int(weekday)
+                                                                                        ^^^^^^^^^^^^
+TypeError: int() argument must be a string, a bytes-like object or a real number, not 'NoneType'
+2023-06-07 01:41:41,028 WARNING Функция <function DB.edit_schedule at 0x000001AFF1F01D00> не сработала c параметрами ((<db_class.DB object at 0x000001AFF1E60850>,), {'schedule_id': 94, 'weekday': None, 'sport': 'Non', 'gym': None, 'time': '19.31'})
+2023-06-07 01:41:41,030 ERROR invalid literal for int() with base 10: 'Non'
+Traceback (most recent call last):
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 17, in function_wrapper
+    function_result = func(*args, **kwargs)
+                      ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Vanek\Desktop\tg_bot\db_class.py", line 124, in edit_schedule
+    + 'тип, ' * int(sport)
+                ^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'Non'
+2023-06-07 01:41:41,030 WARNING Функция <function DB.edit_schedule at 0x000001AFF1F01D00> не сработала c параметрами ((<db_class.DB object at 0x000001AFF1E60850>,), {'schedule_id': 95, 'weekday': 6, 'sport': 'Non', 'gym': 137, 'time': '19.32'})
