@@ -26,24 +26,28 @@ if __name__ == "__main__":
 # remove_schedule
 # edit_schedule
 
-# remove_train
-# move_train
-# add_train
-
-# current_schedule_corrections
+# get_schedule_corrections
+# add_schedule_correction
 # remove_schedule_correction
+# edit_schedule_correction
 
-# meme
-# add meme
-# random meme
-
-# edit_welcome_meme
-# delete_welcome_meme
-# set_default_welcome_meme
-# welcome_meme
+# remove_training
+# move_training
+# add_training
 
 # add_admin
 # delete_admin
+
+# edit_settings
+# chat_GPT
+# welcome_meme
+
+# TODO
+# meme
+# add meme
+# remove meme
+# remove_all_memes
+# random meme
 
 
 
