@@ -73,10 +73,10 @@ assert len(current_sh2) == 3, "неверное колво current_sh2"
 assert current_sh2 == [current_sh1[0]] + current_sh1[2:], \
     "неверное содержание current_sh2"
 
-m_sh1 = my_db.edit_schedule(schedule_id=sh1, weekday=2, sport=None, gym=g2, time=None)
-m_sh2 = my_db.edit_schedule(schedule_id=sh3, weekday=None, sport="Non", gym=None, time="19.31")
-m_sh3 = my_db.edit_schedule(schedule_id=sh4, weekday=6, sport="Non", gym=g4, time="19.32")
-m_sh4 = my_db.edit_schedule(schedule_id=sh1, weekday=None, sport=None, gym=None, time=None)
+m_sh1 = my_db.edit_schedule(schedule_id=sh1, new_weekday=2, new_sport=None, new_gym=g2, new_time=None)
+m_sh2 = my_db.edit_schedule(schedule_id=sh3, new_weekday=None, new_sport="Non", new_gym=None, new_time="19.31")
+m_sh3 = my_db.edit_schedule(schedule_id=sh4, new_weekday=6, new_sport="Non", new_gym=g4, new_time="19.32")
+m_sh4 = my_db.edit_schedule(schedule_id=sh1, new_weekday=None, new_sport=None, new_gym=None, new_time=None)
 print(m_sh1, m_sh2, m_sh3, m_sh3, sep='\n')
 
 # TODO добавить assert на содержание текущего набота расписание

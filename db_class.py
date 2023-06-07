@@ -29,14 +29,15 @@ def connect_to_db(func):
 
 def form_an_sql_from_kwargs(start_word='new_', **kwargs):
     edit_columns_list = []
-    for key, value in kwargs:
+    for key, value in kwargs.items():
         if key.startswith(start_word):
             key = key.replace(start_word, '', 1)
         if value:
-            edit_columns_list += [f'{key} = {value}']
+            edit_columns_list += [f'{key} = "{value}"']
 
     edit_columns_str = ', '.join(edit_columns_list)
     return edit_columns_str
+
 
 class DB:
     def __init__(self, db_filename: str):
@@ -49,18 +50,20 @@ class DB:
     @connect_to_db
     def clear_all_tables(self):
         self.cur.execute('''DELETE FROM "chat"''')
+        self.cur.execute('''DELETE FROM "chat_settings"''')
         self.cur.execute('''DELETE FROM "gym"''')
         self.cur.execute('''DELETE FROM "schedule"''')
         self.cur.execute('''DELETE FROM "schedule_correction"''')
         self.cur.execute('''DELETE FROM "meme"''')
         self.cur.execute('''DELETE FROM "answer_alternative"''')
         self.cur.execute('''DELETE FROM "admin"''')
+        logging.info("БД очищена")
         return "Все таблицы базы данных были очищены"
 
     @connect_to_db
     def new_chat(self, telegram_chat_id: int):
         self.cur.execute('''INSERT INTO "chat" (telegram_chat_id) VALUES (?)''',
-                         (telegram_chat_id, ))
+                         (telegram_chat_id,))
         self.cur.execute('''INSERT INTO "chat_settings" (chat, welcome_meme, chat_GPT) VALUES (?, ?, ?)''',
                          (telegram_chat_id, DEFAULT_WELCOME_MEME_PATH, False))
         return "В базу данных бота добавлен новый чат (всем приветики в этом чатике)"
@@ -127,9 +130,9 @@ class DB:
 
         self.cur.execute(f'''UPDATE "schedule" SET {edit_columns_str} WHERE id == ?''', (schedule_id,))
         return ("Рапсисание изменено. Отредактированы следующие поля: " + 'день недели, ' * bool(new_weekday)
-                                                                        + 'тип, ' * bool(new_sport)
-                                                                        + 'спортзал, ' * bool(new_gym)
-                                                                        + 'время, ' * bool(new_time))[:-2]
+                + 'тип, ' * bool(new_sport)
+                + 'спортзал, ' * bool(new_gym)
+                + 'время, ' * bool(new_time))[:-2]
 
     @connect_to_db
     def get_schedule_corrections(self, telegram_chat_id: int):
@@ -161,12 +164,14 @@ class DB:
                                  new_new_date: Datetime, new_new_time: str, new_new_gym: int):
 
         if not (new_correction_type or new_old_date or new_old_time or new_old_gym
-                                    or new_new_date or new_new_time or new_new_gym):
+                or new_new_date or new_new_time or new_new_gym):
             return "Поправка в расписание не была изменена (параметны не были переданы)"
 
         edit_columns_str = form_an_sql_from_kwargs(new_correction_type=new_correction_type,
-                                 new_old_date=new_old_date, new_old_time=new_old_time, new_old_gym=new_old_gym,
-                                 new_new_date=new_new_date, new_new_time=new_new_time, new_new_gym=new_new_gym)
+                                                   new_old_date=new_old_date, new_old_time=new_old_time,
+                                                   new_old_gym=new_old_gym,
+                                                   new_new_date=new_new_date, new_new_time=new_new_time,
+                                                   new_new_gym=new_new_gym)
 
         self.cur.execute(f'''UPDATE "schedule" SET {edit_columns_str} WHERE id == ?''', (schedule_correction_id,))
         return ("Поправка в рапсисание изменена. Отредактированы следующие поля: " +
@@ -177,13 +182,15 @@ class DB:
 
     @connect_to_db
     def add_admin(self, telegram_chat_id: int, telegram_user_id: int):
-        self.cur.execute('''INSERT INTO "admin" (chat, telegram_user_id) VALUES (?, ?)''', telegram_chat_id, telegram_user_id)
+        self.cur.execute('''INSERT INTO "admin" (chat, telegram_user_id) VALUES (?, ?)''', telegram_chat_id,
+                         telegram_user_id)
 
     @connect_to_db
     def remove_admin(self, telegram_chat_id: int, telegram_user_id: int):
         self.cur.execute('''DELETE FROM "admin" WHERE "chat" = ? AND "telegram_user_id" = ?''',
                          telegram_chat_id, telegram_user_id)
 
+    @connect_to_db
     def edit_chat_settings(self, telegram_chat_id: int, **kwargs):
         # на текущем этапе разработки кваргсы это
         # chat_GPT: bool, welcome_meme: path
@@ -200,3 +207,8 @@ class DB:
         self.cur.execute(f'''UPDATE "chat_settings" SET {edit_columns_str} WHERE chat == ?''', (telegram_chat_id,))
         return ("Настройки были изменены. Отредактированы следующие поля: " + str(list(kwargs.keys())))
 
+    @connect_to_db
+    def get_column_names(self, table_name: str):
+        self.cur.execute(f'PRAGMA table_info("{table_name}")')
+        column_names = [i for i in self.cur.fetchall()]
+        return column_names
