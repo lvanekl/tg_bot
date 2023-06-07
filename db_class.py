@@ -1,7 +1,7 @@
 import sqlite3 as sq
 import logging
 
-from datetime import time as Time, datetime as Datetime
+from datetime import time as Time, date as Date, datetime as Datetime
 
 from env import DB_LOG_PATH, DEFAULT_WELCOME_MEME_PATH
 
@@ -42,6 +42,18 @@ def form_an_sql_from_kwargs(start_word='new_', **kwargs):
 class DB:
     def __init__(self, db_filename: str):
         self.db_filename = db_filename
+        self.create_default_tables()
+
+        self.TABLES = self.get_table_names()
+
+        self.CHAT_COLUMNS = self.get_column_names("chat")
+        self.CHAT_SETTINGS_COLUMNS = self.get_column_names("chat_settings")
+        self.GYM_COLUMNS = self.get_column_names("gym")
+        self.ADMIN_COLUMNS = self.get_column_names("admin")
+        self.ANSWER_ALTERNATIVE_COLUMNS = self.get_column_names("answer_alternative")
+        self.MEME_COLUMNS = self.get_column_names("meme")
+        self.SCHEDULE_COLUMNS = self.get_column_names("schedule")
+        self.SCHEDULE_CORRECTION_COLUMNS = self.get_column_names("schedule_correction")
 
     @connect_to_db
     def create_default_tables(self):
@@ -105,13 +117,19 @@ class DB:
     @connect_to_db
     def get_schedule(self, telegram_chat_id: int):
         self.cur.execute('''SELECT * FROM "schedule" WHERE chat == ? ORDER BY weekday''', (telegram_chat_id,))
-        return self.cur.fetchall()
+        schedule = list(map(list, self.cur.fetchall()))
+
+        i = self.SCHEDULE_COLUMNS.index('time')
+        for sh in schedule:
+            sh[i] = Time.fromisoformat(sh[i])
+
+        return schedule
 
     @connect_to_db
     def add_schedule(self, telegram_chat_id: int, weekday: int, sport: str, gym: int, time: Time):
         assert 1 <= weekday <= 7
         self.cur.execute('''INSERT INTO "schedule" (chat, weekday, sport, gym, time) VALUES (?, ?, ?, ?, ?)''',
-                         (telegram_chat_id, weekday, sport, gym, time))
+                         (telegram_chat_id, weekday, sport, gym, str(time)))
         return "Добавлена новая тренировка в расписание"
 
     @connect_to_db
@@ -121,12 +139,12 @@ class DB:
 
     @connect_to_db
     def edit_schedule(self, schedule_id: int, new_weekday: int = None,
-                      new_sport: str = None, new_gym: int = None, new_time: str = None):
+                      new_sport: str = None, new_gym: int = None, new_time: Time = None):
         if not (new_weekday or new_sport or new_gym or new_time):
             return "Расписание не было изменено (параметны не были переданы)"
 
         edit_columns_str = form_an_sql_from_kwargs(new_weekday=new_weekday, new_sport=new_sport,
-                                                   new_gym=new_gym, new_time=new_time)
+                                                   new_gym=new_gym, new_time=str(new_time))
 
         self.cur.execute(f'''UPDATE "schedule" SET {edit_columns_str} WHERE id == ?''', (schedule_id,))
         return ("Рапсисание изменено. Отредактированы следующие поля: " + 'день недели, ' * bool(new_weekday)
@@ -138,19 +156,40 @@ class DB:
     def get_schedule_corrections(self, telegram_chat_id: int):
         self.cur.execute('''SELECT * FROM "schedule_correction" WHERE chat == ? ORDER BY date_created''',
                          (telegram_chat_id,))
-        return self.cur.fetchall()
+
+        schedule_corrections = list(map(list, self.cur.fetchall()))
+
+        old_date_i = self.SCHEDULE_CORRECTION_COLUMNS.index('old_date')
+        new_date_i = self.SCHEDULE_CORRECTION_COLUMNS.index('new_date')
+        old_time_i = self.SCHEDULE_CORRECTION_COLUMNS.index('old_time')
+        new_time_i = self.SCHEDULE_CORRECTION_COLUMNS.index('new_time')
+
+        for sh_c in schedule_corrections:
+            if sh_c[old_date_i]:
+                sh_c[old_date_i] = Date.fromisoformat(sh_c[old_date_i])
+            if sh_c[new_date_i]:
+                sh_c[new_date_i] = Date.fromisoformat(sh_c[new_date_i])
+            if sh_c[old_time_i]:
+                sh_c[old_time_i] = Time.fromisoformat(sh_c[old_time_i])
+            if sh_c[new_time_i]:
+                sh_c[new_time_i] = Time.fromisoformat(sh_c[new_time_i])
+
+        return schedule_corrections
 
     @connect_to_db
     def add_schedule_correction(self, telegram_chat_id: int, correction_type: str,
-                                old_date: Datetime, old_time: str, old_gym: int,
-                                new_date: Datetime, new_time: str, new_gym: int):
+                                old_date: Date = None, old_time: Time = None, old_gym: int = None,
+                                new_date: Date = None, new_time: Time = None, new_gym: int = None):
         self.cur.execute('''INSERT INTO "schedule_correction" (chat, date_created, correction_type,
                                                                old_date, old_time, old_gym,
                                                                new_date, new_time, new_gym) 
                                                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)''',
-                         (telegram_chat_id, int(Datetime.now().timestamp()), correction_type,
-                          old_date, old_time, old_gym,
-                          new_date, new_time, new_gym))
+                         (telegram_chat_id, int(Datetime.now().timestamp() * 1000), correction_type,
+                          str(old_date) if old_date != None else None,
+                          str(old_time) if old_time != None else None, old_gym,
+                          str(new_date) if new_date != None else None,
+                          str(new_time) if new_time != None else None, new_gym))
+
         return "Добавлена новая поправка в расписание"
 
     @connect_to_db
@@ -160,17 +199,17 @@ class DB:
 
     @connect_to_db
     def edit_schedule_correction(self, schedule_correction_id: int, new_correction_type: str,
-                                 new_old_date: Datetime, new_old_time: str, new_old_gym: int,
-                                 new_new_date: Datetime, new_new_time: str, new_new_gym: int):
+                                 new_old_date: Date, new_old_time: Time, new_old_gym: int,
+                                 new_new_date: Date, new_new_time: Time, new_new_gym: int):
 
         if not (new_correction_type or new_old_date or new_old_time or new_old_gym
                 or new_new_date or new_new_time or new_new_gym):
             return "Поправка в расписание не была изменена (параметны не были переданы)"
 
         edit_columns_str = form_an_sql_from_kwargs(new_correction_type=new_correction_type,
-                                                   new_old_date=new_old_date, new_old_time=new_old_time,
+                                                   new_old_date=str(new_old_date), new_old_time=str(new_old_time),
                                                    new_old_gym=new_old_gym,
-                                                   new_new_date=new_new_date, new_new_time=new_new_time,
+                                                   new_new_date=str(new_new_date), new_new_time=str(new_new_time),
                                                    new_new_gym=new_new_gym)
 
         self.cur.execute(f'''UPDATE "schedule" SET {edit_columns_str} WHERE id == ?''', (schedule_correction_id,))
@@ -179,6 +218,11 @@ class DB:
                 + 'старая дата, ' * bool(new_old_date) + 'новая дата, ' * bool(new_new_date)
                 + 'старое время, ' * bool(new_old_time) + 'новое время, ' * bool(new_new_gym)
                 + 'старый спортзал, ' * bool(new_old_gym) + 'новая спортзал, ' * bool(new_new_time))[:-2]
+
+    @connect_to_db
+    def get_admins(self, telegram_chat_id: int):
+        self.cur.execute('''SELECT * FROM "admin" WHERE chat == ?''', (telegram_chat_id,))
+        return self.cur.fetchall()
 
     @connect_to_db
     def add_admin(self, telegram_chat_id: int, telegram_user_id: int):
@@ -210,5 +254,11 @@ class DB:
     @connect_to_db
     def get_column_names(self, table_name: str):
         self.cur.execute(f'PRAGMA table_info("{table_name}")')
-        column_names = [i for i in self.cur.fetchall()]
+        column_names = [i[1] for i in self.cur.fetchall()]
         return column_names
+
+    @connect_to_db
+    def get_table_names(self):
+        self.cur.execute('''SELECT * FROM "sqlite_master" WHERE type = "table"''')
+        tables = self.cur.fetchall()
+        return [table[1] for table in tables]
