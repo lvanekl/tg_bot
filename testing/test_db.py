@@ -1,0 +1,143 @@
+import pytest
+# import logging
+
+from db.db_class import DB
+from env import DB_PATH, TESTING_LOG_PATH, DEFAULT_WELCOME_MEME_PATH, DEFAULT_CHAT_GPT_FLAG
+
+# logging.basicConfig(level=logging.INFO, filename=TESTING_LOG_PATH, filemode="a",
+#                     format="%(asctime)s - %(levelname)s %(message)s", encoding='utf-8',
+#                     handlers=[logging.FileHandler('sample.txt', 'w', 'utf-8')])
+# logging.basicConfig(level=logging.INFO, filename=TESTING_LOG_PATH, filemode="a",
+#                     format="%(asctime)s - %(levelname)s %(message)s", encoding='utf-8')
+
+my_db = DB(DB_PATH)
+
+
+@pytest.mark.parametrize("chats_amount, tg_chats_ids", [(1, [11111]), (2, [1111, 2222]), (3, [111, 222, 333])])
+def test_chat_and_chat_settings(chats_amount, tg_chats_ids):
+    my_db.clear_all_tables()
+
+    for i in range(chats_amount):
+        my_db.new_chat(telegram_chat_id=tg_chats_ids[i])
+
+    chats = my_db.get_chats()
+
+    assert len(chats) == chats_amount
+    assert [chat['telegram_chat_id'] for chat in chats] == tg_chats_ids
+
+    chats_settings = [my_db.get_chat_settings(chat_id) for chat_id in tg_chats_ids]
+    assert len(chats_settings) == chats_amount
+
+    assert [[{"chat": chat_id, "welcome_meme": DEFAULT_WELCOME_MEME_PATH, "chat_GPT": DEFAULT_CHAT_GPT_FLAG}]
+            for chat_id in tg_chats_ids] == chats_settings
+
+    # кажется чаты и настройки к ним создаются правильно
+    my_db.clear_all_tables()
+
+
+@pytest.mark.parametrize("chat_id, kwargs", [(11111, {}),
+                                             (22222, {'welcome_meme': '1.jpg'}),
+                                             (33333, {'welcome_meme': ''}),
+                                             (44444, {'chat_GPT': 1}),
+                                             (55555, {'chat_GPT': 0})])
+def test_edit_chat_settings(chat_id, kwargs):
+    # изменение настроек достаточно проверить на чате с индексом 0
+    my_db.clear_all_tables()
+    my_db.new_chat(telegram_chat_id=chat_id)
+
+    my_db.edit_chat_settings(chat_id, **kwargs)
+    settings = my_db.get_chat_settings(chat_id)[0]
+
+    assert settings['chat'] == chat_id
+
+    settings_edited_fields = {}
+
+    for key, value in settings.items():
+        if key in kwargs:
+            settings_edited_fields[key] = value
+
+    assert settings_edited_fields == kwargs
+    # думаю что все норм
+    my_db.clear_all_tables()
+
+
+def f():
+    # очистка базы данных
+    print(my_db.clear_all_tables())
+    # создание нового чата
+    print(my_db.new_chat(telegram_chat_id=1111111))
+
+    # проверим пустая ли бд
+    assert my_db.get_gyms(telegram_chat_id=1111111) == [], \
+        "база данных не пустая, для данного чата уже есть данные в бд"
+
+    # создаем 4 зала
+    my_db.add_gym(telegram_chat_id=1111111, name="gym1")
+    my_db.add_gym(telegram_chat_id=1111111, name="gym2")
+    my_db.add_gym(telegram_chat_id=1111111, name="gym3")
+    my_db.add_gym(telegram_chat_id=1111111, name="gym4")
+    current_gyms1 = my_db.get_gyms(telegram_chat_id=1111111)
+
+    # проверяем что их 4
+    # print(current_gyms1)
+    assert len(current_gyms1) == 4, "неверное колво current_gyms1"
+
+    # достанем айдишники новых залов
+    g1 = current_gyms1[0][0]
+    g2 = current_gyms1[1][0]
+    g3 = current_gyms1[2][0]
+    g4 = current_gyms1[3][0]
+
+    # удалим третий
+    my_db.remove_gym(g3)
+    current_gyms2 = my_db.get_gyms(telegram_chat_id=1111111)
+
+    # проверим что такая же длина и содержание
+    # print(current_gyms2)
+    assert len(current_gyms2) == 3, "неверное колво current_gyms2"
+    assert current_gyms2 == current_gyms1[:2] + [current_gyms1[3]], \
+        "неверное содержание current_gyms2"
+
+    # проверим как работает редактирование
+    m_g1 = my_db.edit_gym(g1, name="gggym1")
+    m_g2 = my_db.edit_gym(g2, address="address2")
+    m_g3 = my_db.edit_gym(g4, name="gggym4", address="address4")
+    m_g4 = my_db.edit_gym(g1)
+
+    # TODO добавить assert на содержание текущего набота залов
+    current_gyms3 = my_db.get_gyms(telegram_chat_id=1111111)
+    # print(m_g1, m_g2, m_g3, m_g4, sep='\n')
+    # print(current_gyms3)
+
+    # проверяем работоспособность расписания
+    # создадим расписание
+    my_db.add_schedule(telegram_chat_id=1111111, weekday=1, sport="s1", gym=g1, time="19.30")
+    my_db.add_schedule(telegram_chat_id=1111111, weekday=5, sport="s2", gym=g3, time="19.30")
+    my_db.add_schedule(telegram_chat_id=1111111, weekday=7, sport="s3", gym=g4, time="19.30")
+    my_db.add_schedule(telegram_chat_id=1111111, weekday=2, sport="s1", gym=g1, time="19.30")
+    current_sh1 = my_db.get_schedule(telegram_chat_id=1111111)
+
+    sh1, sh2, sh3, sh4 = current_sh1[0][0], current_sh1[1][0], current_sh1[2][0], current_sh1[3][0]
+
+    # проверим, что расписаний сколько нужно создалось
+    # print(current_sh1)
+    assert len(current_sh1) == 4, "неверное колво current_sh1"
+
+    # проверим удаление, удалим второе расписание
+    my_db.remove_schedule(sh2)
+    current_sh2 = my_db.get_schedule(telegram_chat_id=1111111)
+    print(current_sh2)
+    assert len(current_sh2) == 3, "неверное колво current_sh2"
+    assert current_sh2 == [current_sh1[0]] + current_sh1[2:], \
+        "неверное содержание current_sh2"
+
+    m_sh1 = my_db.edit_schedule(schedule_id=sh1, new_weekday=2, new_sport=None, new_gym=g2, new_time=None)
+    m_sh2 = my_db.edit_schedule(schedule_id=sh3, new_weekday=None, new_sport="Non", new_gym=None, new_time="19.31")
+    m_sh3 = my_db.edit_schedule(schedule_id=sh4, new_weekday=6, new_sport="Non", new_gym=g4, new_time="19.32")
+    m_sh4 = my_db.edit_schedule(schedule_id=sh1, new_weekday=None, new_sport=None, new_gym=None, new_time=None)
+    print(m_sh1, m_sh2, m_sh3, m_sh3, sep='\n')
+
+    # TODO добавить assert на содержание текущего набота расписание
+    current_sh3 = my_db.get_schedule(telegram_chat_id=1111111)
+    # print(m_sh1, m_sh2, m_sh3, m_sh4, sep='\n')
+    # print(current_sh3)

@@ -1,6 +1,6 @@
-from db_class import DB
+from db.db_class import DB
 from env import DB_PATH, DEFAULT_WELCOME_MEME_PATH
-from datetime import time as Time, date as Date, datetime as Datetime, timedelta
+from datetime import time as Time, date as Date, timedelta
 
 my_db = DB(DB_PATH)
 
