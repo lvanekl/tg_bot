@@ -173,7 +173,7 @@ if __name__ == "__main__":
 
     my_db.clear_all_tables()
     my_db.new_chat(telegram_chat_id)
-    my_db.add_answer_alternative(telegram_chat_id=telegram_chat_id, answer_type="question", answer_value="Прийдете?")
+    my_db.add_answer_alternative(telegram_chat_id=telegram_chat_id, answer_type="question", answer_value="Придете?")
     my_db.add_answer_alternative(telegram_chat_id=telegram_chat_id, answer_type="yes", answer_value="Да")
     my_db.add_answer_alternative(telegram_chat_id=telegram_chat_id, answer_type="maybe", answer_value="Мб")
     my_db.add_answer_alternative(telegram_chat_id=telegram_chat_id, answer_type="no", answer_value="Нет")
