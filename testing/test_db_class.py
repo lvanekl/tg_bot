@@ -2,14 +2,16 @@ import pytest
 # import logging
 
 from db.db_class import DB
-from env import DB_PATH, TESTING_LOG_PATH, DEFAULT_WELCOME_MEME_PATH, DEFAULT_CHAT_GPT_FLAG
+from env import DB_PATH, TESTING_LOG_PATH, DEFAULT_WELCOME_MEME_PATH, \
+    DEFAULT_CHAT_GPT_FLAG, DEFAULT_CHAT_FUNNY_YES_FLAG, DEFAULT_CHAT_FUNNY_QUESTION_FLAG
 
 my_db = DB(DB_PATH)
 
 
 @pytest.mark.parametrize("chats_amount, tg_chats_ids", [(1, [11111]), (2, [1111, 2222]), (3, [111, 222, 333])])
 def test_new_chat(chats_amount, tg_chats_ids):
-    # Этот тест также проверяет chat_settings
+    # Этот тест проверяет методы new_chat, get_chats, get_chat_settings
+
     my_db.clear_all_tables()
 
     for i in range(chats_amount):
@@ -23,7 +25,8 @@ def test_new_chat(chats_amount, tg_chats_ids):
     chats_settings = [my_db.get_chat_settings(chat_id) for chat_id in tg_chats_ids]
     assert len(chats_settings) == chats_amount
 
-    assert [[{"chat": chat_id, "welcome_meme": DEFAULT_WELCOME_MEME_PATH, "chat_GPT": DEFAULT_CHAT_GPT_FLAG}]
+    assert [[{"chat": chat_id, "welcome_meme": DEFAULT_WELCOME_MEME_PATH, "chat_GPT": DEFAULT_CHAT_GPT_FLAG,
+              "funny_yes": DEFAULT_CHAT_FUNNY_YES_FLAG, "funny_question": DEFAULT_CHAT_FUNNY_QUESTION_FLAG}]
             for chat_id in tg_chats_ids] == chats_settings
 
     # кажется чаты и настройки к ним создаются правильно
@@ -33,10 +36,10 @@ def test_new_chat(chats_amount, tg_chats_ids):
 @pytest.mark.parametrize("chat_id, kwargs", [(11111, {}),
                                              (22222, {'welcome_meme': '1.jpg'}),
                                              (33333, {'welcome_meme': ''}),
-                                             (44444, {'chat_GPT': 1}),
-                                             (55555, {'chat_GPT': 0})])
+                                             (44444, {'chat_GPT': 1, "funny_yes": 1, "funny_question": 0}),
+                                             (55555, {'chat_GPT': 0, "funny_yes": 0, "funny_question": 1})])
 def test_edit_chat_settings(chat_id, kwargs):
-    # изменение настроек достаточно проверить на чате с индексом 0
+    # Этот тест проверяет методы edit_chat_settings, get_chat_settings
     my_db.clear_all_tables()
     my_db.new_chat(telegram_chat_id=chat_id)
 
@@ -57,15 +60,50 @@ def test_edit_chat_settings(chat_id, kwargs):
 
 
 def test_add_get_remove_gym():
+    # Этот тест проверяет методы get_gyms, add_gym, remove_gym
     pass
+
 
 def test_edit_gym():
+    # Этот тест проверяет методы get_gyms, add_gym, edit_gym
     pass
 
 
+def test_add_get_remove_schedule():
+    # Этот тест проверяет методы
+    pass
 
 
-def f():
+def test_edit_schedule():
+    # Этот тест проверяет методы
+    pass
+
+
+def test_add_get_remove_schedule_correction():
+    # Этот тест проверяет методы
+    pass
+
+
+def test_edit_schedule_correction():
+    # Этот тест проверяет методы
+    pass
+
+
+def test_add_get_remove_admin():
+    # Этот тест проверяет методы
+    pass
+
+
+def test_add_get_remove_answer_alternative():
+    # Этот тест проверяет методы
+    pass
+
+def test_add_get_remove_answer_alternatives_grouped_by_types():
+    # Этот тест проверяет методы
+    pass
+
+
+def old_testing():
     # очистка базы данных
     print(my_db.clear_all_tables())
     # создание нового чата
