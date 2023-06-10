@@ -122,13 +122,13 @@ class DB:
     def add_gym(self, telegram_chat_id: int, name: str, address: str = None) -> tuple:
         self.cur.execute('''INSERT INTO "gym" (name, address, chat) VALUES (?, ?, ?)''',
                          (name, address, telegram_chat_id))
-        gym_id = self.con.lastrowid
+        gym_id = self.cur.lastrowid
         return gym_id, {"status": "success", "detail": "зал добавлен в базу данных"}
 
     @connect_to_db
     def remove_gym(self, gym_id: int) -> tuple:
         self.cur.execute('''DELETE FROM "gym" WHERE id == ?''', (gym_id,))
-        gym_id = self.con.lastrowid
+        gym_id = self.cur.lastrowid
         return None, {"status": "success", "detail": "зал удален из базы данных"}
 
     @connect_to_db
@@ -136,7 +136,7 @@ class DB:
         if name and address:
             self.cur.execute('''UPDATE "gym" SET name = ?, address = ? WHERE id == ?''',
                              (name, address, gym_id,))
-            gym_id = self.con.lastrowid
+            gym_id = self.cur.lastrowid
             return gym_id, {"status": "success", "detail": "Изменены имя и адрес зала"}
         elif name:
             self.cur.execute('''UPDATE "gym" SET name = ? WHERE id == ?''',
@@ -154,11 +154,10 @@ class DB:
     @connect_to_db
     def get_schedule(self, telegram_chat_id: int) -> list:
         self.cur.execute('''SELECT * FROM "schedule" WHERE chat == ? ORDER BY weekday''', (telegram_chat_id,))
-        schedule = list(map(list, self.cur.fetchall()))
+        schedule = self.cur.fetchall()
 
-        i = self.SCHEDULE_COLUMNS.index('time')
         for sh in schedule:
-            sh[i] = Time.fromisoformat(sh[i])
+            sh['time'] = Time.fromisoformat(sh['time'])
 
         return schedule
 
@@ -167,7 +166,7 @@ class DB:
         assert 1 <= weekday <= 7
         self.cur.execute('''INSERT INTO "schedule" (chat, weekday, sport, gym, time) VALUES (?, ?, ?, ?, ?)''',
                          (telegram_chat_id, weekday, sport, gym, str(time)))
-        schedule_id = self.con.lastrowid
+        schedule_id = self.cur.lastrowid
         return schedule_id, {"status": "success", "detail": "Добавлена новая тренировка в расписание"}
 
     @connect_to_db
@@ -198,22 +197,15 @@ class DB:
         self.cur.execute('''SELECT * FROM "schedule_correction" WHERE chat == ? ORDER BY date_created''',
                          (telegram_chat_id,))
 
-        schedule_corrections = list(map(list, self.cur.fetchall()))
-
-        old_date_i = self.SCHEDULE_CORRECTION_COLUMNS.index('old_date')
-        new_date_i = self.SCHEDULE_CORRECTION_COLUMNS.index('new_date')
-        old_time_i = self.SCHEDULE_CORRECTION_COLUMNS.index('old_time')
-        new_time_i = self.SCHEDULE_CORRECTION_COLUMNS.index('new_time')
+        schedule_corrections = self.cur.fetchall()
 
         for sh_c in schedule_corrections:
-            if sh_c[old_date_i]:
-                sh_c[old_date_i] = Date.fromisoformat(sh_c[old_date_i])
-            if sh_c[new_date_i]:
-                sh_c[new_date_i] = Date.fromisoformat(sh_c[new_date_i])
-            if sh_c[old_time_i]:
-                sh_c[old_time_i] = Time.fromisoformat(sh_c[old_time_i])
-            if sh_c[new_time_i]:
-                sh_c[new_time_i] = Time.fromisoformat(sh_c[new_time_i])
+            for key in ['old_date', 'new_date']:
+                if sh_c[key]:
+                    sh_c[key] = Date.fromisoformat(sh_c[key])
+            for key in ['old_time', 'new_time']:
+                if sh_c[key]:
+                    sh_c[key] = Time.fromisoformat(sh_c[key])
 
         return schedule_corrections
 
@@ -231,7 +223,7 @@ class DB:
                           str(new_date) if new_date is not None else None,
                           str(new_time) if new_time is not None else None, new_gym))
 
-        schedule_correction_id = self.con.lastrowid
+        schedule_correction_id = self.cur.lastrowid
         return schedule_correction_id, {"status": "success", "detail": "Добавлена новая поправка в расписание"}
 
     @connect_to_db
@@ -267,76 +259,76 @@ class DB:
                                                     + 'новая спортзал, ' * bool(new_new_time))[:-2]})
 
 
-@connect_to_db
-def get_admins(self, telegram_chat_id: int) -> list:
-    self.cur.execute('''SELECT * FROM "admin" WHERE chat == ?''', (telegram_chat_id,))
-    return self.cur.fetchall()
+    @connect_to_db
+    def get_admins(self, telegram_chat_id: int) -> list:
+        self.cur.execute('''SELECT * FROM "admin" WHERE chat == ?''', (telegram_chat_id,))
+        return self.cur.fetchall()
 
 
-@connect_to_db
-def add_admin(self, telegram_chat_id: int, telegram_user_id: int) -> tuple:
-    self.cur.execute('''INSERT INTO "admin" (chat, telegram_user_id) VALUES (?, ?)''', (telegram_chat_id,
-                                                                                        telegram_user_id))
-    admin_id = self.con.lastrowid
-    return admin_id, {"status": "success", "detail": "В чат добавлен новый админ"}
+    @connect_to_db
+    def add_admin(self, telegram_chat_id: int, telegram_user_id: int) -> tuple:
+        self.cur.execute('''INSERT INTO "admin" (chat, telegram_user_id) VALUES (?, ?)''', (telegram_chat_id,
+                                                                                            telegram_user_id))
+        admin_id = self.cur.lastrowid
+        return admin_id, {"status": "success", "detail": "В чат добавлен новый админ"}
 
 
-@connect_to_db
-def remove_admin(self, telegram_chat_id: int, telegram_user_id: int) -> tuple:
-    self.cur.execute('''DELETE FROM "admin" WHERE "chat" = ? AND "telegram_user_id" = ?''',
-                     telegram_chat_id, telegram_user_id)
-    return None, {"status": "success", "detail": "Админ удален"}
+    @connect_to_db
+    def remove_admin(self, telegram_chat_id: int, telegram_user_id: int) -> tuple:
+        self.cur.execute('''DELETE FROM "admin" WHERE "chat" = ? AND "telegram_user_id" = ?''',
+                         telegram_chat_id, telegram_user_id)
+        return None, {"status": "success", "detail": "Админ удален"}
 
 
-@connect_to_db
-def get_answer_alternatives(self, telegram_chat_id: int) -> list:
-    self.cur.execute('''SELECT * FROM "answer_alternative" WHERE chat == ?''', (telegram_chat_id,))
-    return self.cur.fetchall()
+    @connect_to_db
+    def get_answer_alternatives(self, telegram_chat_id: int) -> list:
+        self.cur.execute('''SELECT * FROM "answer_alternative" WHERE chat == ?''', (telegram_chat_id,))
+        return self.cur.fetchall()
 
 
-@connect_to_db
-def add_answer_alternative(self, telegram_chat_id: int, answer_type: str, answer_value: str) -> tuple:
-    self.cur.execute('''INSERT INTO "answer_alternative" (chat, type, value) VALUES (?, ?, ?)''', (telegram_chat_id,
-                                                                                                   answer_type,
-                                                                                                   answer_value))
+    @connect_to_db
+    def add_answer_alternative(self, telegram_chat_id: int, answer_type: str, answer_value: str) -> tuple:
+        self.cur.execute('''INSERT INTO "answer_alternative" (chat, type, value) VALUES (?, ?, ?)''', (telegram_chat_id,
+                                                                                                       answer_type,
+                                                                                                       answer_value))
 
-    aa_id = self.con.lastrowid
-    return aa_id, {"status": "success", "detail": f"Добавлен вариант ответа: {answer_type} -> {answer_value}"}
-
-
-@connect_to_db
-def remove_answer_alternative(self, telegram_chat_id: int, answer_alternative_id: int) -> tuple:
-    self.cur.execute('''DELETE FROM "answer_alternative" WHERE "id" = ?''', answer_alternative_id)
-    return None, {"status": "success", "detail": f"Удален вариант ответа"}
+        aa_id = self.cur.lastrowid
+        return aa_id, {"status": "success", "detail": f"Добавлен вариант ответа: {answer_type} -> {answer_value}"}
 
 
-def get_answer_alternatives_grouped_by_types(self, telegram_chat_id: int) -> dict:
-    answer_alternatives = self.get_answer_alternatives(telegram_chat_id)
-    # [dict(zip(column_names, line)) for line in result]
-
-    answer_alternatives_grouped_by_types = {}
-
-    for aa in answer_alternatives:
-        t = aa["type"]
-        v = aa["value"]
-        if t not in answer_alternatives_grouped_by_types:
-            answer_alternatives_grouped_by_types[t] = []
-        answer_alternatives_grouped_by_types[t].append(v)
-
-    return answer_alternatives_grouped_by_types
+    @connect_to_db
+    def remove_answer_alternative(self, telegram_chat_id: int, answer_alternative_id: int) -> tuple:
+        self.cur.execute('''DELETE FROM "answer_alternative" WHERE "id" = ?''', answer_alternative_id)
+        return None, {"status": "success", "detail": f"Удален вариант ответа"}
 
 
-@connect_to_db
-def get_column_names(self, table_name: str) -> list:
-    self.cur.execute(f'PRAGMA table_info("{table_name}")')
-    column_names = [i[1] for i in self.cur.fetchall()]
-    return column_names
+    def get_answer_alternatives_grouped_by_types(self, telegram_chat_id: int) -> dict:
+        answer_alternatives = self.get_answer_alternatives(telegram_chat_id)
+        # [dict(zip(column_names, line)) for line in result]
+
+        answer_alternatives_grouped_by_types = {}
+
+        for aa in answer_alternatives:
+            t = aa["type"]
+            v = aa["value"]
+            if t not in answer_alternatives_grouped_by_types:
+                answer_alternatives_grouped_by_types[t] = []
+            answer_alternatives_grouped_by_types[t].append(v)
+
+        return answer_alternatives_grouped_by_types
 
 
-@connect_to_db
-def get_table_names(self) -> list:
-    self.cur.execute('''SELECT * FROM "sqlite_master" WHERE type = "table"''')
-    tables = self.cur.fetchall()
-    return [table[1] for table in tables]
+    @connect_to_db
+    def get_column_names(self, table_name: str) -> list:
+        self.cur.execute(f'PRAGMA table_info("{table_name}")')
+        column_names = [i[1] for i in self.cur.fetchall()]
+        return column_names
 
-# TODO memes
+
+    @connect_to_db
+    def get_table_names(self) -> list:
+        self.cur.execute('''SELECT * FROM "sqlite_master" WHERE type = "table"''')
+        tables = self.cur.fetchall()
+        return [table[1] for table in tables]
+
+    # TODO memes
