@@ -1,7 +1,8 @@
 
 db/db.sqlite3
 env.py
-logs/
+logs/db_log.log
+logs/testing_log.log
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

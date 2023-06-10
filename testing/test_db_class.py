@@ -3,7 +3,8 @@ import pytest
 
 from db.db_class import DB
 from env import DB_PATH, TESTING_LOG_PATH, DEFAULT_WELCOME_MEME_PATH, \
-    DEFAULT_CHAT_GPT_FLAG, DEFAULT_CHAT_FUNNY_YES_FLAG, DEFAULT_CHAT_FUNNY_QUESTION_FLAG
+    DEFAULT_CHAT_GPT_FLAG, DEFAULT_CHAT_FUNNY_YES_FLAG, DEFAULT_CHAT_FUNNY_QUESTION_FLAG, \
+    DEFAULT_CHAT_FUNNY_NO_FLAG, DEFAULT_CHAT_FUNNY_MAYBE_FLAG
 
 my_db = DB(DB_PATH)
 
@@ -26,7 +27,8 @@ def test_new_chat(chats_amount, tg_chats_ids):
     assert len(chats_settings) == chats_amount
 
     assert [[{"chat": chat_id, "welcome_meme": DEFAULT_WELCOME_MEME_PATH, "chat_GPT": DEFAULT_CHAT_GPT_FLAG,
-              "funny_yes": DEFAULT_CHAT_FUNNY_YES_FLAG, "funny_question": DEFAULT_CHAT_FUNNY_QUESTION_FLAG}]
+              "funny_yes": DEFAULT_CHAT_FUNNY_YES_FLAG, "funny_question": DEFAULT_CHAT_FUNNY_QUESTION_FLAG,
+              "funny_no": DEFAULT_CHAT_FUNNY_NO_FLAG, "funny_maybe": DEFAULT_CHAT_FUNNY_MAYBE_FLAG}]
             for chat_id in tg_chats_ids] == chats_settings
 
     # кажется чаты и настройки к ним создаются правильно
@@ -97,6 +99,7 @@ def test_add_get_remove_admin():
 def test_add_get_remove_answer_alternative():
     # Этот тест проверяет методы
     pass
+
 
 def test_add_get_remove_answer_alternatives_grouped_by_types():
     # Этот тест проверяет методы
