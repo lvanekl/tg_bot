@@ -4,17 +4,12 @@ import pytest
 from db.db_class import DB
 from env import DB_PATH, TESTING_LOG_PATH, DEFAULT_WELCOME_MEME_PATH, DEFAULT_CHAT_GPT_FLAG
 
-# logging.basicConfig(level=logging.INFO, filename=TESTING_LOG_PATH, filemode="a",
-#                     format="%(asctime)s - %(levelname)s %(message)s", encoding='utf-8',
-#                     handlers=[logging.FileHandler('sample.txt', 'w', 'utf-8')])
-# logging.basicConfig(level=logging.INFO, filename=TESTING_LOG_PATH, filemode="a",
-#                     format="%(asctime)s - %(levelname)s %(message)s", encoding='utf-8')
-
 my_db = DB(DB_PATH)
 
 
 @pytest.mark.parametrize("chats_amount, tg_chats_ids", [(1, [11111]), (2, [1111, 2222]), (3, [111, 222, 333])])
-def test_chat_and_chat_settings(chats_amount, tg_chats_ids):
+def test_new_chat(chats_amount, tg_chats_ids):
+    # Этот тест также проверяет chat_settings
     my_db.clear_all_tables()
 
     for i in range(chats_amount):
@@ -59,6 +54,15 @@ def test_edit_chat_settings(chat_id, kwargs):
     assert settings_edited_fields == kwargs
     # думаю что все норм
     my_db.clear_all_tables()
+
+
+def test_add_get_remove_gym():
+    pass
+
+def test_edit_gym():
+    pass
+
+
 
 
 def f():
