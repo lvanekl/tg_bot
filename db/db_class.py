@@ -269,8 +269,8 @@ class DB:
 
     @connect_to_db
     def add_admin(self, telegram_chat_id: int, telegram_user_id: int) -> str:
-        self.cur.execute('''INSERT INTO "admin" (chat, telegram_user_id) VALUES (?, ?)''', telegram_chat_id,
-                         telegram_user_id)
+        self.cur.execute('''INSERT INTO "admin" (chat, telegram_user_id) VALUES (?, ?)''', (telegram_chat_id,
+                         telegram_user_id))
         return "В чат добавлен новый админ"
 
     @connect_to_db
@@ -299,8 +299,8 @@ class DB:
 
     @connect_to_db
     def add_answer_alternative(self, telegram_chat_id: int, answer_type: str, answer_value: str):
-        self.cur.execute('''INSERT INTO "answer_alternative" (chat, type, value) VALUES (?, ?, ?)''', telegram_chat_id,
-                         answer_type, answer_value)
+        self.cur.execute('''INSERT INTO "answer_alternative" (chat, type, value) VALUES (?, ?, ?)''', (telegram_chat_id,
+                         answer_type, answer_value))
         return f"Добавлен вариант ответа: {answer_type} -> {answer_value}"
 
     @connect_to_db

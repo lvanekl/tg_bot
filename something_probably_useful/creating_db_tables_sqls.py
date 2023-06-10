@@ -22,8 +22,10 @@ create_chat_settings_table = '''CREATE TABLE "chat_settings" (
 	"chat"	INTEGER NOT NULL UNIQUE,
 	"welcome_meme"	TEXT,
 	"chat_GPT"	INTEGER DEFAULT 0,
-	"funny_yes"	INTEGER DEFAULT 0,
 	"funny_question"	INTEGER DEFAULT 0,
+	"funny_yes"	INTEGER DEFAULT 0,
+	"funny_no"	INTEGER DEFAULT 0,
+	"funny_maybe"	INTEGER DEFAULT 0,
 	FOREIGN KEY("chat") REFERENCES "chat"("telegram_chat_id") ON DELETE CASCADE
 )'''
 
