@@ -1,5 +1,7 @@
 import json
 import random
+
+import logging
 import openai
 
 from db.db_class import DB
@@ -8,11 +10,11 @@ from datetime import date as Date, time as Time
 
 openai.api_key = openai_token
 
-my_prompt = '''Я занимаюсь в спортсекции и я провожу голосование о сегодняшней тренировке, 
+default_prompt = '''Я занимаюсь в спортсекции и я провожу голосование о сегодняшней тренировке, 
 чтобы люди могли отметить планируют ли они сегодня прийти. По смыслу варианты ответа следующие: да, нет, не знаю. 
 Твоя задача придумать вопрос и замены этим вариантам ответов, чтобы опросы не были однообразными. Атмосфера дружеская и в чате приветствуются подколы вплоть до самых жестких. 
 Нужны варианты ответов в максимально шутливой форме - выдавай самые абсурдные и абстрактные варианты. Как можно меньше пафоса.
-Запретные темы: тренер, пот, подружки, вторая половинка, энергетический напиток, железо, шест, всплыть, одна рука, вес. Я хочу получить ответ в формате json:
+Запретные темы: тренер, пот, подружки, вторая половинка, энергетический напиток, железо, шест, всплыть, одна рука, вес, футбол. Я хочу получить ответ в формате json:
 {"question": ["", "", ""], "yes": ["", "", ""], "maybe": ["", "", ""], "no": ["", "", ""], ]}. 
 Вот тебе примеры хороших вариантов,  {
   "да": [
@@ -35,43 +37,55 @@ my_prompt = '''Я занимаюсь в спортсекции и я прово�
 }
 
 НО ИХ ТЕБЕ КОПИРОВАТЬ НЕЛЬЗЯ. Придумай сам, мне нужны именно новые варианты ответов
-Обязательно сделай перепроверку на грамматические, фактические и речевые ошибки'''
+Обязательно сделай перепроверку на грамматические, фактические и речевые ошибки.'''
 
 my_db = DB(DB_PATH)
 
 
-def generate_poll(telegram_chat_id: int, date: Date, time: Time, place: str):
+def generate_poll(telegram_chat_id: int, date: Date, time: Time, place: str, sport: str, chat_settings: dict):
     # chatGPT, funny_yes_option, funny_question, emoji = True, False, False, False
 
-    chat_settings = my_db.get_chat_settings(telegram_chat_id=telegram_chat_id)[0]
-    chat_GPT, funny_yes_option, funny_question, emoji = chat_settings["chat_GPT"], chat_settings["funny_yes_option"], \
-        chat_settings["funny_question"], chat_settings["emoji"]
+    chat_GPT, funny_question, funny_yes_option, funny_maybe_option, funny_no_option, emoji = \
+        chat_settings["chat_GPT"], chat_settings["funny_question"], chat_settings["funny_yes"], \
+            chat_settings["funny_maybe"], chat_settings["funny_no"], chat_settings["emoji"]
 
     if chat_GPT:
         poll_variants = generate_poll_variants_chat_GPT()
-        poll_variants = eval(poll_variants)
-        print(poll_variants)
+        try:
+            poll_variants = eval(poll_variants)
+        except Exception as e:
+            logging.error(e)
+            poll_variants = {}
     else:
         poll_variants = generate_poll_variants_using_db(telegram_chat_id)
 
     poll = choose_poll_variant(poll_variants)
 
     if emoji:
-        poll = add_emoji(poll_variants)
+        poll = add_emoji(poll)
 
-    if funny_question:
-        poll["question"] += f" ({date}, {time}, {place})"
-    else:
-        poll["question"] = generate_default_question(date=date, time=time, place=place)
+    if chat_GPT:
+        if funny_question:
+            poll["question"] += f" ({date}, {time}, {place})"
+        else:
+            poll["question"] = generate_default_question(date=date, time=time, place=place)
 
-    if not funny_yes_option:
-        poll["options"][0] = generate_default_yes_option(date=date, time=time, place=place)
+        if not funny_yes_option:
+            poll["options"][0] = generate_default_yes_option(date=date, time=time, place=place)
+        if not funny_maybe_option:
+            poll["options"][1] = generate_default_maybe_option(date=date, time=time, place=place)
+        if not funny_no_option:
+            poll["options"][2] = generate_default_no_option(date=date, time=time, place=place)
 
     return poll
 
 
-def generate_poll_variants_chat_GPT():
-    response = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": my_prompt}],
+def generate_poll_variants_chat_GPT(sport: str = None):
+    prompt = default_prompt
+    if sport is not None:
+        prompt += f". ВАЖНО: вид спорта - {sport}, поэтому не используй другие виды спорта в генерации"
+
+    response = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}],
                                             max_tokens=2700)
     content = str(response)
     return json.loads(content)["choices"][0]["message"]["content"]
@@ -85,10 +99,12 @@ def generate_poll_variants_using_db(telegram_chat_id: int):
 
 
 def choose_poll_variant(poll_variants):
-    question = random.choice(poll_variants["question"])
-    yes_option = random.choice(poll_variants["yes"])
-    maybe_option = random.choice(poll_variants["maybe"])
-    no_option = random.choice(poll_variants["no"])
+    # конструкция poll_variants.get("ключ", ["..."]) нужна,
+    # чтобы даже если этого ключа нет в словаре, опрос не поломался
+    question = random.choice(poll_variants.get("question", ["Идете сегодня на тренировку"]))
+    yes_option = random.choice(poll_variants.get("yes", ["Планирую"]))
+    maybe_option = random.choice(poll_variants.get("maybe", ["Возможно"]))
+    no_option = random.choice(poll_variants.get("no", ["Нет("]))
 
     return {"question": question, "options": [yes_option, maybe_option, no_option]}
 
@@ -119,7 +135,7 @@ def generate_default_question(date: Date, time: Time, place: str):
 
 
 def generate_default_yes_option(date: Date, time: Time, place: str):
-    templates = [f"Тренируюсь в {place}?",
+    templates = [f"Тренируюсь в {place}",
                  f"Прийду",
                  f"+1",
                  f"Поддержу тренировку своим присутствием"]
@@ -127,5 +143,40 @@ def generate_default_yes_option(date: Date, time: Time, place: str):
     return random.choice(templates)
 
 
+def generate_default_no_option(date: Date, time: Time, place: str):
+    templates = [f"Не прийду",
+                 f"Занят чем-то бессмысленным и бесполезным",
+                 f"Я ужасный человек и не иду сегодня на тренировку",
+                 f"Неправильный вариант ответа",
+                 "Нашел причину не идти сегодня (долго искал - пришлось придумать)"]
+
+    return random.choice(templates)
+
+
+def generate_default_maybe_option(date: Date, time: Time, place: str):
+    templates = [f"Пока в раздумьях",
+                 f"Еще не решил",
+                 f"хз",
+                 f"Мой выбор между тренировкой и отдыхом зависит от победы апатии или энтузиазма"]
+
+    return random.choice(templates)
+
+
 if __name__ == "__main__":
-    print(generate_poll(True))
+    telegram_chat_id = 1111
+    chat_settings = {"chat_GPT": False, "funny_question": False, "funny_yes": False, "funny_maybe": False,
+                     "funny_no": False, "emoji": True}
+    date = Date.today()
+    time = Time(hour=19, minute=34)
+    place = "Акроритм"
+    sport = "Спортивная гимнастика"
+
+    my_db.clear_all_tables()
+    my_db.new_chat(telegram_chat_id)
+    my_db.add_answer_alternative(telegram_chat_id=telegram_chat_id, answer_type="question", answer_value="Прийдете?")
+    my_db.add_answer_alternative(telegram_chat_id=telegram_chat_id, answer_type="yes", answer_value="Да")
+    my_db.add_answer_alternative(telegram_chat_id=telegram_chat_id, answer_type="maybe", answer_value="Мб")
+    my_db.add_answer_alternative(telegram_chat_id=telegram_chat_id, answer_type="no", answer_value="Нет")
+
+    print(generate_poll(telegram_chat_id, date=date, time=time, place=place, chat_settings=chat_settings, sport=sport))
+    my_db.clear_all_tables()
