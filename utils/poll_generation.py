@@ -162,7 +162,8 @@ def generate_default_maybe_option(date: Date, time: Time, place: str) -> str:
     return random.choice(templates)
 
 
-async def test_generation():
+async def main():
+    # функция для тестирования генерируемых ответов
     db_path = TEST_DB_PATH
     my_db = DB(db_path)
 
@@ -188,4 +189,4 @@ async def test_generation():
 
 
 if __name__ == "__main__":
-    pass
+    main()

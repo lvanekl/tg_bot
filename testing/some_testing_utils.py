@@ -1,8 +1,10 @@
+import asyncio
+
 from db.db_class import DB
 from env import TEST_DB_PATH, DEFAULT_WELCOME_MEME_PATH
 from datetime import time as Time, date as Date, timedelta
 
-t_i = 1111111
+t_i = 1111
 def_time1 = Time(hour=19, minute=30)
 def_time2 = Time(hour=21, minute=30)
 
@@ -14,7 +16,7 @@ today_m2 = Date.today() - timedelta(days=2)
 
 
 def load_test_data(func):
-    def wrapper(*args, **kwargs):
+    async def wrapper(*args, **kwargs):
         my_db = DB(TEST_DB_PATH)
         my_db.clear_all_tables()
         # создадим чат и настройки
@@ -26,7 +28,7 @@ def load_test_data(func):
 
         # создадим расписание
         sch1 = (await my_db.add_schedule(telegram_chat_id=t_i, weekday=2, sport="s1", gym=g1, time=def_time1))[0]
-        sch2 = (await my_db.add_schedule(telegram_chat_id=t_i, weekday=6, sport="s2", gym=g1, time=def_time2))[0]
+        sch2 = (await my_db.add_schedule(telegram_chat_id=t_i, weekday=7, sport="s2", gym=g1, time=def_time2))[0]
         sch3 = (await my_db.add_schedule(telegram_chat_id=t_i, weekday=1, sport="s2", gym=g2, time=def_time2))[0]
         sch4 = (await my_db.add_schedule(telegram_chat_id=t_i, weekday=4, sport="s1", gym=g2, time=def_time1))[0]
 
@@ -41,7 +43,11 @@ def load_test_data(func):
         # answer_alternative
         # meme
         # admin
-        result = func(*args, **kwargs)
+        if asyncio.iscoroutinefunction(func):
+            result = await func(*args, **kwargs)
+        else:
+            result = func(*args, **kwargs)
+
         my_db.clear_all_tables()
 
         return result

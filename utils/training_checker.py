@@ -1,19 +1,19 @@
 from db.db_class import DB
 from env import DB_PATH
-from testing.test_utils import load_test_data
+from testing.some_testing_utils import load_test_data
 from datetime import time as Time, date as Date
 
-my_db = DB(DB_PATH)
 
 
 @load_test_data
-def analyze_schedule_today(telegram_chat_id: int):
-    all_planned_trainigs = my_db.get_schedule(telegram_chat_id=telegram_chat_id)
-    all_corrections = my_db.get_schedule_corrections(telegram_chat_id=telegram_chat_id)
+async def analyze_schedule_today(telegram_chat_id: int, db_path: str):
+    my_db = DB(db_path)
+    all_planned_trainigs = await my_db.get_schedule(telegram_chat_id=telegram_chat_id)
+    all_corrections = await my_db.get_schedule_corrections(telegram_chat_id=telegram_chat_id)
     all_corrections.sort(key=lambda x: x["date_created"])
 
     today = Date.today()
-    current_weekday = today.weekday()
+    current_weekday = today.weekday() + 1
 
     today_planned_trainings = [tr for tr in all_planned_trainigs if tr['weekday'] == current_weekday]
 
@@ -54,8 +54,10 @@ def analyze_schedule_today(telegram_chat_id: int):
     # print(all_corrections)
     return today_planned_trainings
 
-def clear_schedule_corrections():
-    chats = my_db.get_chats()
+
+async def clear_schedule_corrections(db_path: str):
+    my_db = DB(db_path)
+    chats = await my_db.get_chats()
     today = Date.today()
 
     counter = 0
@@ -64,10 +66,11 @@ def clear_schedule_corrections():
         schedule_corrections = my_db.get_schedule_corrections(telegram_chat_id=t_i)
         for sch_c in schedule_corrections:
             if sch_c['old_date'] < today and sch_c['new_date'] < today:
-                my_db.remove_schedule_correction(schedule_correction_id=sch_c['id'])
+                await my_db.remove_schedule_correction(schedule_correction_id=sch_c['id'])
                 counter += 1
 
     return f"Удалено {counter} устаревших поправок в расписание"
+
 
 if __name__ == "__main__":
     analyze_schedule_today(telegram_chat_id=1111111)
