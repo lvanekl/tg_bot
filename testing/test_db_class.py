@@ -6,7 +6,7 @@ import pytest
 
 from db.db_class import DB
 from env import TEST_DB_PATH, DEFAULT_WELCOME_MEME_PATH, \
-    DEFAULT_CHAT_GPT_FLAG, DEFAULT_CHAT_FUNNY_YES_FLAG, DEFAULT_CHAT_FUNNY_QUESTION_FLAG, \
+    DEFAULT_CHAT_FUNNY_YES_FLAG, DEFAULT_CHAT_FUNNY_QUESTION_FLAG, \
     DEFAULT_CHAT_FUNNY_NO_FLAG, DEFAULT_CHAT_FUNNY_MAYBE_FLAG
 
 
@@ -30,7 +30,7 @@ async def test_new_chat(chats_amount: int, tg_chats_ids: list):
 
     assert len(chats_settings) == chats_amount
 
-    assert [[{"chat": chat_id, "welcome_meme": DEFAULT_WELCOME_MEME_PATH, "chat_GPT": DEFAULT_CHAT_GPT_FLAG,
+    assert [[{"chat": chat_id, "welcome_meme": DEFAULT_WELCOME_MEME_PATH,
               "funny_yes": DEFAULT_CHAT_FUNNY_YES_FLAG, "funny_question": DEFAULT_CHAT_FUNNY_QUESTION_FLAG,
               "funny_no": DEFAULT_CHAT_FUNNY_NO_FLAG, "funny_maybe": DEFAULT_CHAT_FUNNY_MAYBE_FLAG}]
             for chat_id in tg_chats_ids] == chats_settings
@@ -43,8 +43,8 @@ async def test_new_chat(chats_amount: int, tg_chats_ids: list):
 @pytest.mark.parametrize("chat_id, chat_settings", [(11111, {}),
                                                     (22222, {'welcome_meme': '1.jpg'}),
                                                     (33333, {'welcome_meme': ''}),
-                                                    (44444, {'chat_GPT': 1, "funny_yes": 1, "funny_question": 0}),
-                                                    (55555, {'chat_GPT': 0, "funny_yes": 0, "funny_question": 1})])
+                                                    (44444, {"funny_yes": 1, "funny_question": 0}),
+                                                    (55555, {"funny_yes": 0, "funny_question": 1})])
 async def test_edit_chat_settings(chat_id: int, chat_settings: dict):
     # Этот тест проверяет методы edit_chat_settings, get_chat_settings
     my_db = DB(TEST_DB_PATH)

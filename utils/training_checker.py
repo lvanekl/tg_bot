@@ -8,14 +8,7 @@ my_db = DB(DB_PATH)
 
 @load_test_data
 def analyze_schedule_today(telegram_chat_id: int):
-    # Достаем все тренировки (дни недели) для сегондяшнего чата
-    # Дальше достаем все отмены тренировок СЕГОДНЯ
-    # Дальше все добавления тренировок НА СЕГОДНЯ
-    # Дальше все переносы тренировок НА СЕГОДНЯ
-
     all_planned_trainigs = my_db.get_schedule(telegram_chat_id=telegram_chat_id)
-    # all_corrections = [dict(zip(my_db.SCHEDULE_CORRECTION_COLUMNS, correction)) for correction in
-    #                    my_db.get_schedule_corrections(telegram_chat_id=telegram_chat_id)]
     all_corrections = my_db.get_schedule_corrections(telegram_chat_id=telegram_chat_id)
     all_corrections.sort(key=lambda x: x["date_created"])
 

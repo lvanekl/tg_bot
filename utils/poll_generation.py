@@ -42,11 +42,11 @@ default_prompt = '''Я занимаюсь в спортсекции и я про
 
 async def generate_poll(telegram_chat_id: int, date: Date, time: Time, place: str,
                         sport: str, chat_settings: dict, db_path: str) -> dict:
-    chat_GPT, funny_question, funny_yes_option, funny_maybe_option, funny_no_option, emoji = \
-        chat_settings["chat_GPT"], chat_settings["funny_question"], chat_settings["funny_yes"], \
+    funny_question, funny_yes_option, funny_maybe_option, funny_no_option, emoji = \
+        chat_settings["funny_question"], chat_settings["funny_yes"], \
             chat_settings["funny_maybe"], chat_settings["funny_no"], chat_settings["emoji"]
 
-    if chat_GPT:
+    if any([funny_question, funny_yes_option, funny_maybe_option, funny_no_option]):
         poll_variants = await generate_poll_variants_using_chat_GPT(date, time, place, sport)
         try:
             poll_variants = eval(poll_variants)
@@ -61,7 +61,7 @@ async def generate_poll(telegram_chat_id: int, date: Date, time: Time, place: st
     if emoji:
         poll = add_emoji(poll)
 
-    if chat_GPT:
+    if any([funny_question, funny_yes_option, funny_maybe_option, funny_no_option]):
         if funny_question:
             poll["question"] += f" ({date}, {time}, {place})"
         else:
