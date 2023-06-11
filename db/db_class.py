@@ -329,6 +329,6 @@ class DB:
     def get_table_names(self) -> list:
         self.cur.execute('''SELECT * FROM "sqlite_master" WHERE type = "table"''')
         tables = self.cur.fetchall()
-        return [table[1] for table in tables]
+        return [table['name'] for table in tables]
 
     # TODO memes
