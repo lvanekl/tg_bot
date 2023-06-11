@@ -4,7 +4,8 @@ import logging
 
 from datetime import time as Time, date as Date, datetime as Datetime
 
-from env import DB_LOG_PATH, DEFAULT_WELCOME_MEME_PATH, DEFAULT_CHAT_GPT_FLAG
+from env import DB_LOG_PATH, DEFAULT_WELCOME_MEME_PATH, DEFAULT_CHAT_GPT_FLAG, DEFAULT_CHAT_FUNNY_QUESTION_FLAG, \
+    DEFAULT_CHAT_FUNNY_YES_FLAG, DEFAULT_CHAT_FUNNY_MAYBE_FLAG, DEFAULT_CHAT_FUNNY_NO_FLAG
 
 logging.basicConfig(level=logging.DEBUG, filename=DB_LOG_PATH, filemode="w",
                     format="%(asctime)s %(levelname)s %(message)s", encoding='utf-8')
@@ -79,7 +80,7 @@ class DbTableManager:
     	PRIMARY KEY("id" AUTOINCREMENT),
     	FOREIGN KEY("chat") REFERENCES "chat"("id") ON DELETE CASCADE
     )''',
-                             "answer_alternative": '''CREATE TABLE IF NOT EXISTS "answer_alternative" (
+        "answer_alternative": '''CREATE TABLE IF NOT EXISTS "answer_alternative" (
     	"id"	INTEGER NOT NULL UNIQUE,
     	"chat"	INTEGER NOT NULL,
     	"type"	TEXT NOT NULL,
@@ -87,21 +88,21 @@ class DbTableManager:
     	FOREIGN KEY("chat") REFERENCES "chat"("id") ON DELETE CASCADE,
     	PRIMARY KEY("id" AUTOINCREMENT)
     )''',
-                             "chat": '''CREATE TABLE IF NOT EXISTS "chat" (
+        "chat": '''CREATE TABLE IF NOT EXISTS "chat" (
     	"telegram_chat_id"	INTEGER NOT NULL UNIQUE,
     	PRIMARY KEY("telegram_chat_id")
     )''',
-                             "chat_settings": '''CREATE TABLE IF NOT EXISTS "chat_settings" (
+        "chat_settings": f'''CREATE TABLE IF NOT EXISTS "chat_settings" (
     	"chat"	INTEGER NOT NULL UNIQUE,
-    	"welcome_meme"	TEXT,
-    	"chat_GPT"	INTEGER DEFAULT 0,
-    	"funny_question"	INTEGER DEFAULT 0,
-    	"funny_yes"	INTEGER DEFAULT 0,
-    	"funny_no"	INTEGER DEFAULT 0,
-    	"funny_maybe"	INTEGER DEFAULT 0,
+    	"welcome_meme"	TEXT DEFAULT "{DEFAULT_WELCOME_MEME_PATH}",
+    	"chat_GPT"	INTEGER DEFAULT "{DEFAULT_CHAT_GPT_FLAG}",
+    	"funny_question"	INTEGER DEFAULT "{DEFAULT_CHAT_FUNNY_QUESTION_FLAG}",
+    	"funny_yes"	INTEGER DEFAULT "{DEFAULT_CHAT_FUNNY_YES_FLAG}",
+    	"funny_no"	INTEGER DEFAULT "{DEFAULT_CHAT_FUNNY_NO_FLAG}",
+    	"funny_maybe"	INTEGER DEFAULT "{DEFAULT_CHAT_FUNNY_MAYBE_FLAG}",
     	FOREIGN KEY("chat") REFERENCES "chat"("telegram_chat_id") ON DELETE CASCADE
     )''',
-                             "gym": '''CREATE TABLE IF NOT EXISTS "gym" (
+        "gym": '''CREATE TABLE IF NOT EXISTS "gym" (
     	"id"	INTEGER NOT NULL UNIQUE,
     	"chat"	INTEGER NOT NULL,
     	"name"	TEXT NOT NULL,
@@ -109,14 +110,14 @@ class DbTableManager:
     	PRIMARY KEY("id" AUTOINCREMENT),
     	FOREIGN KEY("chat") REFERENCES "chat"("id") ON DELETE CASCADE
     )''',
-                             "meme": '''CREATE TABLE IF NOT EXISTS "meme" (
+        "meme": '''CREATE TABLE IF NOT EXISTS "meme" (
     	"id"	INTEGER NOT NULL UNIQUE,
     	"chat"	INTEGER NOT NULL,
     	"picture_path"	TEXT NOT NULL,
     	FOREIGN KEY("chat") REFERENCES "chat"("telegram_chat_id") ON DELETE CASCADE,
     	PRIMARY KEY("id" AUTOINCREMENT)
     )''',
-                             "schedule": '''CREATE TABLE IF NOT EXISTS "schedule" (
+        "schedule": '''CREATE TABLE IF NOT EXISTS "schedule" (
     	"id"	INTEGER NOT NULL UNIQUE,
     	"chat"	INTEGER NOT NULL,
     	"weekday"	INTEGER NOT NULL CHECK("weekday" >= 1 AND "weekday" <= 7),
@@ -127,7 +128,7 @@ class DbTableManager:
     	FOREIGN KEY("chat") REFERENCES "chat"("telegram_chat_id") ON DELETE CASCADE,
     	PRIMARY KEY("id" AUTOINCREMENT)
     )''',
-                             "schedule_correction": '''CREATE TABLE IF NOT EXISTS "schedule_correction" (
+        "schedule_correction": '''CREATE TABLE IF NOT EXISTS "schedule_correction" (
     	"id"	INTEGER NOT NULL UNIQUE,
     	"chat"	INTEGER NOT NULL,
     	"date_created"	INTEGER NOT NULL,
@@ -144,7 +145,7 @@ class DbTableManager:
     	FOREIGN KEY("old_gym") REFERENCES "gym"("id") ON DELETE CASCADE
     )'''
 
-                             }
+    }
 
     @connect_to_db_sync
     def create_default_tables(self):
