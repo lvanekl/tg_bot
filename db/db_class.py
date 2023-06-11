@@ -379,11 +379,15 @@ class DbAdminManager:
                                  telegram_chat_id, telegram_user_id)
         return None, {"status": "success", "detail": "Админ удален"}
 
+
+class DbMemeManager:
+    pass
     # TODO memes
 
 
 class DB(DbTableManager, DbChatAndSettingsManager, DbGymManager,
-         DbScheduleAndScheduleCorrectionsManager, DbAnswerAlternativesManager, DbAdminManager):
+         DbScheduleAndScheduleCorrectionsManager, DbAnswerAlternativesManager,
+         DbAdminManager, DbMemeManager):
     def __init__(self, db_filename: str):
         self.db_filename = db_filename
         self.create_default_tables()
