@@ -15,8 +15,12 @@ def dict_factory(cursor, row):
     fields = [column[0] for column in cursor.description]
     return {key: value for key, value in zip(fields, row)}
 
+
 def check_for_sql_injection(*args, **kwargs):
+    # возможно эта функция избыточна. Я прочитал в интернете, что cur.execute("...?...", (arg1, arg2, ...))
+    # уже дает проверку на sql инъекции, а у меня почти все написано через него
     pass
+
 
 def connect_to_db_async(func):
     async def function_wrapper(*args, **kwargs):
