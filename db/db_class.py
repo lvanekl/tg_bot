@@ -163,7 +163,7 @@ class DbTableManager:
     @connect_to_db_sync
     def get_column_names(self, table_name: str) -> list:
         self.cur_s.execute(f'PRAGMA table_info("{table_name}")')
-        column_names = [i[1] for i in self.cur_s.fetchall()]
+        column_names = [i['name'] for i in self.cur_s.fetchall()]
         return column_names
 
     @connect_to_db_sync
@@ -224,7 +224,7 @@ class DbGymManager:
     async def add_gym(self, telegram_chat_id: int, name: str, address: str = None) -> tuple:
         await self.cur_a.execute('''INSERT INTO "gym" (name, address, chat) VALUES (?, ?, ?)''',
                                  (name, address, telegram_chat_id))
-        gym_id = await self.cur_a.lastrowid
+        gym_id = self.cur_a.lastrowid
         return gym_id, {"status": "success", "detail": "зал добавлен в базу данных"}
 
     @connect_to_db_async
@@ -269,7 +269,7 @@ class DbScheduleAndScheduleCorrectionsManager:
         assert 1 <= weekday <= 7
         await self.cur_a.execute('''INSERT INTO "schedule" (chat, weekday, sport, gym, time) VALUES (?, ?, ?, ?, ?)''',
                                  (telegram_chat_id, weekday, sport, gym, str(time)))
-        schedule_id = await self.cur_a.lastrowid
+        schedule_id = self.cur_a.lastrowid
         return schedule_id, {"status": "success", "detail": "Добавлена новая тренировка в расписание"}
 
     @connect_to_db_async
@@ -326,7 +326,7 @@ class DbScheduleAndScheduleCorrectionsManager:
                                   str(new_date) if new_date is not None else None,
                                   str(new_time) if new_time is not None else None, new_gym))
 
-        schedule_correction_id = await self.cur_a.lastrowid
+        schedule_correction_id = self.cur_a.lastrowid
         return schedule_correction_id, {"status": "success", "detail": "Добавлена новая поправка в расписание"}
 
     @connect_to_db_async
@@ -377,7 +377,7 @@ class DbAnswerAlternativesManager:
                                   answer_type,
                                   answer_value))
 
-        aa_id = await self.cur_a.lastrowid
+        aa_id = self.cur_a.lastrowid
         return aa_id, {"status": "success", "detail": f"Добавлен вариант ответа: {answer_type} -> {answer_value}"}
 
     @connect_to_db_async
@@ -412,7 +412,7 @@ class DbAnswerAlternativesManager:
                                   answer_type,
                                   answer_value))
 
-        aa_id = await self.cur_a.lastrowid
+        aa_id = self.cur_a.lastrowid
         return aa_id, {"status": "success", "detail": f"Добавлен вариант ответа: {answer_type} -> {answer_value}"}
 
     @connect_to_db_async
@@ -447,7 +447,7 @@ class DbAdminManager:
     async def add_admin(self, telegram_chat_id: int, telegram_user_id: int) -> tuple:
         await self.cur_a.execute('''INSERT INTO "admin" (chat, telegram_user_id) VALUES (?, ?)''', (telegram_chat_id,
                                                                                                     telegram_user_id))
-        admin_id = await self.cur_a.lastrowid
+        admin_id = self.cur_a.lastrowid
         return admin_id, {"status": "success", "detail": "В чат добавлен новый админ"}
 
     @connect_to_db_async

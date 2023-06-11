@@ -7,13 +7,13 @@ from env import TEST_DB_PATH, DEFAULT_WELCOME_MEME_PATH, \
     DEFAULT_CHAT_GPT_FLAG, DEFAULT_CHAT_FUNNY_YES_FLAG, DEFAULT_CHAT_FUNNY_QUESTION_FLAG, \
     DEFAULT_CHAT_FUNNY_NO_FLAG, DEFAULT_CHAT_FUNNY_MAYBE_FLAG
 
-my_db = DB(TEST_DB_PATH)
 
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("chats_amount, tg_chats_ids", [(1, [11111]), (2, [1111, 2222]), (3, [111, 222, 333])])
 async def test_new_chat(chats_amount, tg_chats_ids):
     # Этот тест проверяет методы new_chat, get_chats, get_chat_settings
+    my_db = DB(TEST_DB_PATH)
 
     my_db.clear_all_tables()
 
@@ -46,6 +46,7 @@ async def test_new_chat(chats_amount, tg_chats_ids):
                                              (55555, {'chat_GPT': 0, "funny_yes": 0, "funny_question": 1})])
 async def test_edit_chat_settings(chat_id, kwargs):
     # Этот тест проверяет методы edit_chat_settings, get_chat_settings
+    my_db = DB(TEST_DB_PATH)
     my_db.clear_all_tables()
     await my_db.new_chat(telegram_chat_id=chat_id)
 
@@ -67,50 +68,78 @@ async def test_edit_chat_settings(chat_id, kwargs):
 
 def test_add_get_remove_gym():
     # Этот тест проверяет методы get_gyms, add_gym, remove_gym
-    pass
+    my_db = DB(TEST_DB_PATH)
+    my_db.clear_all_tables()
+
+    my_db.clear_all_tables()
 
 
 def test_edit_gym():
     # Этот тест проверяет методы get_gyms, add_gym, edit_gym
-    pass
+    my_db = DB(TEST_DB_PATH)
+    my_db.clear_all_tables()
+
+    my_db.clear_all_tables()
 
 
 def test_add_get_remove_schedule():
     # Этот тест проверяет методы
-    pass
+    my_db = DB(TEST_DB_PATH)
+    my_db.clear_all_tables()
+
+    my_db.clear_all_tables()
 
 
 def test_edit_schedule():
     # Этот тест проверяет методы
-    pass
+    my_db = DB(TEST_DB_PATH)
+    my_db.clear_all_tables()
+
+    my_db.clear_all_tables()
 
 
 def test_add_get_remove_schedule_correction():
     # Этот тест проверяет методы
-    pass
+    my_db = DB(TEST_DB_PATH)
+    my_db.clear_all_tables()
+
+    my_db.clear_all_tables()
 
 
 def test_edit_schedule_correction():
     # Этот тест проверяет методы
-    pass
+    my_db = DB(TEST_DB_PATH)
+    my_db.clear_all_tables()
+
+    my_db.clear_all_tables()
 
 
 def test_add_get_remove_admin():
     # Этот тест проверяет методы
-    pass
+    my_db = DB(TEST_DB_PATH)
+    my_db.clear_all_tables()
+
+    my_db.clear_all_tables()
 
 
 def test_add_get_remove_answer_alternative():
     # Этот тест проверяет методы
-    pass
+    my_db = DB(TEST_DB_PATH)
+    my_db.clear_all_tables()
+
+    my_db.clear_all_tables()
 
 
 def test_add_get_remove_answer_alternatives_grouped_by_types():
     # Этот тест проверяет методы
-    pass
+    my_db = DB(TEST_DB_PATH)
+    my_db.clear_all_tables()
+
+    my_db.clear_all_tables()
 
 
 def old_testing():
+    my_db = DB(TEST_DB_PATH)
     # очистка базы данных
     print(my_db.clear_all_tables())
     # создание нового чата
