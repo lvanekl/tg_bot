@@ -70,24 +70,7 @@ def form_an_sql_from_kwargs(start_word: str = '', **kwargs):
     return edit_columns_str
 
 
-class DB:
-    def __init__(self, db_filename: str):
-        self.con_a = None
-        self.cur_a = None
-        self.db_filename = db_filename
-        self.create_default_tables()
-
-        self.TABLES = self.get_table_names()
-
-        self.CHAT_COLUMNS = self.get_column_names("chat")
-        self.CHAT_SETTINGS_COLUMNS = self.get_column_names("chat_settings")
-        self.GYM_COLUMNS = self.get_column_names("gym")
-        self.ADMIN_COLUMNS = self.get_column_names("admin")
-        self.ANSWER_ALTERNATIVE_COLUMNS = self.get_column_names("answer_alternative")
-        self.MEME_COLUMNS = self.get_column_names("meme")
-        self.SCHEDULE_COLUMNS = self.get_column_names("schedule")
-        self.SCHEDULE_CORRECTION_COLUMNS = self.get_column_names("schedule_correction")
-
+class DbTableManager:
     @connect_to_db_sync
     def create_default_tables(self):
         # tOdo
@@ -100,6 +83,20 @@ class DB:
         logging.info("БД очищена")
         return "Все таблицы базы данных были очищены"
 
+    @connect_to_db_sync
+    def get_column_names(self, table_name: str) -> list:
+        self.cur_s.execute(f'PRAGMA table_info("{table_name}")')
+        column_names = [i[1] for i in self.cur_s.fetchall()]
+        return column_names
+
+    @connect_to_db_sync
+    def get_table_names(self) -> list:
+        self.cur_s.execute('''SELECT * FROM "sqlite_master" WHERE type = "table"''')
+        tables = self.cur_s.fetchall()
+        return [table['name'] for table in tables]
+
+
+class DbChatAndSettingsManager:
     @connect_to_db_async
     async def new_chat(self, telegram_chat_id: int) -> tuple:
         await self.cur_a.execute('''INSERT INTO "chat" (telegram_chat_id) VALUES (?)''',
@@ -138,6 +135,9 @@ class DB:
                                    "detail": "Настройки были изменены. Отредактированы следующие поля: " + str(
                                        list(kwargs.keys()))})
 
+
+class DbGymManager:
+
     @connect_to_db_async
     async def get_gyms(self, telegram_chat_id: int) -> list:
         await self.cur_a.execute('''SELECT * FROM "gym" WHERE chat == ?''', (telegram_chat_id,))
@@ -173,6 +173,9 @@ class DB:
             return (gym_id, {"status": "error",
                              "detail": "Данные о зале не были изменены: либо вы пытаетесь установить "
                                        "пустые значения (тогда просто отправьте пробел), либо я рукожоп"})
+
+
+class DbScheduleAndScheduleCorrectionsManager:
 
     @connect_to_db_async
     async def get_schedule(self, telegram_chat_id: int) -> list:
@@ -282,23 +285,8 @@ class DB:
                                                     + 'старый спортзал, ' * bool(new_old_gym)
                                                     + 'новая спортзал, ' * bool(new_new_time))[:-2]})
 
-    @connect_to_db_async
-    async def get_admins(self, telegram_chat_id: int) -> list:
-        await self.cur_a.execute('''SELECT * FROM "admin" WHERE chat == ?''', (telegram_chat_id,))
-        return await self.cur_a.fetchall()
 
-    @connect_to_db_async
-    async def add_admin(self, telegram_chat_id: int, telegram_user_id: int) -> tuple:
-        await self.cur_a.execute('''INSERT INTO "admin" (chat, telegram_user_id) VALUES (?, ?)''', (telegram_chat_id,
-                                                                                                    telegram_user_id))
-        admin_id = await self.cur_a.lastrowid
-        return admin_id, {"status": "success", "detail": "В чат добавлен новый админ"}
-
-    @connect_to_db_async
-    async def remove_admin(self, telegram_chat_id: int, telegram_user_id: int) -> tuple:
-        await self.cur_a.execute('''DELETE FROM "admin" WHERE "chat" = ? AND "telegram_user_id" = ?''',
-                                 telegram_chat_id, telegram_user_id)
-        return None, {"status": "success", "detail": "Админ удален"}
+class DbAnswerAlternativesManager:
 
     @connect_to_db_async
     async def get_answer_alternatives(self, telegram_chat_id: int) -> list:
@@ -335,16 +323,78 @@ class DB:
 
         return answer_alternatives_grouped_by_types
 
-    @connect_to_db_sync
-    def get_column_names(self, table_name: str) -> list:
-        self.cur_s.execute(f'PRAGMA table_info("{table_name}")')
-        column_names = [i[1] for i in self.cur_s.fetchall()]
-        return column_names
+    @connect_to_db_async
+    async def get_answer_alternatives(self, telegram_chat_id: int) -> list:
+        await self.cur_a.execute('''SELECT * FROM "answer_alternative" WHERE chat == ?''', (telegram_chat_id,))
+        return await self.cur_a.fetchall()
 
-    @connect_to_db_sync
-    def get_table_names(self) -> list:
-        self.cur_s.execute('''SELECT * FROM "sqlite_master" WHERE type = "table"''')
-        tables = self.cur_s.fetchall()
-        return [table['name'] for table in tables]
+    @connect_to_db_async
+    async def add_answer_alternative(self, telegram_chat_id: int, answer_type: str, answer_value: str) -> tuple:
+        await self.cur_a.execute('''INSERT INTO "answer_alternative" (chat, type, value) VALUES (?, ?, ?)''',
+                                 (telegram_chat_id,
+                                  answer_type,
+                                  answer_value))
+
+        aa_id = await self.cur_a.lastrowid
+        return aa_id, {"status": "success", "detail": f"Добавлен вариант ответа: {answer_type} -> {answer_value}"}
+
+    @connect_to_db_async
+    async def remove_answer_alternative(self, telegram_chat_id: int, answer_alternative_id: int) -> tuple:
+        await self.cur_a.execute('''DELETE FROM "answer_alternative" WHERE "id" = ?''', answer_alternative_id)
+        return None, {"status": "success", "detail": f"Удален вариант ответа"}
+
+    async def get_answer_alternatives_grouped_by_types(self, telegram_chat_id: int) -> dict:
+        answer_alternatives = await self.get_answer_alternatives(telegram_chat_id)
+        # [dict(zip(column_names, line)) for line in result]
+
+        answer_alternatives_grouped_by_types = {}
+
+        for aa in answer_alternatives:
+            t = aa["type"]
+            v = aa["value"]
+            if t not in answer_alternatives_grouped_by_types:
+                answer_alternatives_grouped_by_types[t] = []
+            answer_alternatives_grouped_by_types[t].append(v)
+
+        return answer_alternatives_grouped_by_types
+
+
+class DbAdminManager:
+
+    @connect_to_db_async
+    async def get_admins(self, telegram_chat_id: int) -> list:
+        await self.cur_a.execute('''SELECT * FROM "admin" WHERE chat == ?''', (telegram_chat_id,))
+        return await self.cur_a.fetchall()
+
+    @connect_to_db_async
+    async def add_admin(self, telegram_chat_id: int, telegram_user_id: int) -> tuple:
+        await self.cur_a.execute('''INSERT INTO "admin" (chat, telegram_user_id) VALUES (?, ?)''', (telegram_chat_id,
+                                                                                                    telegram_user_id))
+        admin_id = await self.cur_a.lastrowid
+        return admin_id, {"status": "success", "detail": "В чат добавлен новый админ"}
+
+    @connect_to_db_async
+    async def remove_admin(self, telegram_chat_id: int, telegram_user_id: int) -> tuple:
+        await self.cur_a.execute('''DELETE FROM "admin" WHERE "chat" = ? AND "telegram_user_id" = ?''',
+                                 telegram_chat_id, telegram_user_id)
+        return None, {"status": "success", "detail": "Админ удален"}
 
     # TODO memes
+
+
+class DB(DbTableManager, DbChatAndSettingsManager, DbGymManager,
+         DbScheduleAndScheduleCorrectionsManager, DbAnswerAlternativesManager, DbAdminManager):
+    def __init__(self, db_filename: str):
+        self.db_filename = db_filename
+        self.create_default_tables()
+
+        self.TABLES = self.get_table_names()
+
+        self.CHAT_COLUMNS = self.get_column_names("chat")
+        self.CHAT_SETTINGS_COLUMNS = self.get_column_names("chat_settings")
+        self.GYM_COLUMNS = self.get_column_names("gym")
+        self.ADMIN_COLUMNS = self.get_column_names("admin")
+        self.ANSWER_ALTERNATIVE_COLUMNS = self.get_column_names("answer_alternative")
+        self.MEME_COLUMNS = self.get_column_names("meme")
+        self.SCHEDULE_COLUMNS = self.get_column_names("schedule")
+        self.SCHEDULE_CORRECTION_COLUMNS = self.get_column_names("schedule_correction")
