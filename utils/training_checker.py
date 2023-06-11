@@ -21,6 +21,7 @@ async def analyze_schedule_today(telegram_chat_id: int, db_path: str):
         if cor['correction_type'] == 'move':
             if cor['old_date'] == today and cor['new_date'] == today:
                 for tr in today_planned_trainings:
+                    # если день остается тот же (и это сегодня), то проверяем, что старые время и место те же самые
                     if tr['time'] == cor['old_time'] and tr['place'] == cor['old_place']:
                         tr['time'] = cor['new_time']
                         tr['place'] = cor['new_place']
@@ -29,8 +30,8 @@ async def analyze_schedule_today(telegram_chat_id: int, db_path: str):
                     if tr['time'] == cor['old_time'] \
                             and tr['place'] == cor['old_place'] \
                             and tr['weekday'] == cor['old_date'].weekday():
-                        # если тренировка которую переносят вообще была
-                        # (дата [день недели], место, время указаны правильно)
+                        # если тренировка которую переносят на сегодня вообще была
+                        # (старые дата [день недели], место, время указаны правильно)
                         today_planned_trainings.append({'id': None, 'chat': telegram_chat_id,
                                                         'sport': tr['sport'],
                                                         'gym': cor['new_place'], 'time': cor['new_time']})
