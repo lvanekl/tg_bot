@@ -1,3 +1,4 @@
+import asyncio
 import pytest
 # import logging
 
@@ -9,21 +10,23 @@ from env import DB_PATH, DEFAULT_WELCOME_MEME_PATH, \
 my_db = DB(DB_PATH)
 
 
+@pytest.mark.asyncio
 @pytest.mark.parametrize("chats_amount, tg_chats_ids", [(1, [11111]), (2, [1111, 2222]), (3, [111, 222, 333])])
-def test_new_chat(chats_amount, tg_chats_ids):
+async def test_new_chat(chats_amount, tg_chats_ids):
     # Этот тест проверяет методы new_chat, get_chats, get_chat_settings
 
     my_db.clear_all_tables()
 
     for i in range(chats_amount):
-        my_db.new_chat(telegram_chat_id=tg_chats_ids[i])
+        await my_db.new_chat(telegram_chat_id=tg_chats_ids[i])
 
-    chats = my_db.get_chats()
+    chats = await my_db.get_chats()
 
     assert len(chats) == chats_amount
     assert [chat['telegram_chat_id'] for chat in chats] == tg_chats_ids
 
-    chats_settings = [my_db.get_chat_settings(chat_id) for chat_id in tg_chats_ids]
+    chats_settings = [await my_db.get_chat_settings(chat_id) for chat_id in tg_chats_ids]
+
     assert len(chats_settings) == chats_amount
 
     assert [[{"chat": chat_id, "welcome_meme": DEFAULT_WELCOME_MEME_PATH, "chat_GPT": DEFAULT_CHAT_GPT_FLAG,
@@ -35,18 +38,19 @@ def test_new_chat(chats_amount, tg_chats_ids):
     my_db.clear_all_tables()
 
 
+@pytest.mark.asyncio
 @pytest.mark.parametrize("chat_id, kwargs", [(11111, {}),
                                              (22222, {'welcome_meme': '1.jpg'}),
                                              (33333, {'welcome_meme': ''}),
                                              (44444, {'chat_GPT': 1, "funny_yes": 1, "funny_question": 0}),
                                              (55555, {'chat_GPT': 0, "funny_yes": 0, "funny_question": 1})])
-def test_edit_chat_settings(chat_id, kwargs):
+async def test_edit_chat_settings(chat_id, kwargs):
     # Этот тест проверяет методы edit_chat_settings, get_chat_settings
     my_db.clear_all_tables()
-    my_db.new_chat(telegram_chat_id=chat_id)
+    await my_db.new_chat(telegram_chat_id=chat_id)
 
-    my_db.edit_chat_settings(chat_id, **kwargs)
-    settings = my_db.get_chat_settings(chat_id)[0]
+    await my_db.edit_chat_settings(chat_id, **kwargs)
+    settings = (await my_db.get_chat_settings(chat_id))[0]
 
     assert settings['chat'] == chat_id
 
@@ -186,3 +190,9 @@ def old_testing():
     current_sh3 = my_db.get_schedule(telegram_chat_id=1111111)
     # print(m_sh1, m_sh2, m_sh3, m_sh4, sep='\n')
     # print(current_sh3)
+
+
+if __name__ == "__main__":
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(test_new_chat())
+    loop.close()
