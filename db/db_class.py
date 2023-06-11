@@ -15,11 +15,17 @@ def dict_factory(cursor, row):
     fields = [column[0] for column in cursor.description]
     return {key: value for key, value in zip(fields, row)}
 
+def check_for_sql_injection(*args, **kwargs):
+    pass
 
 def connect_to_db_async(func):
     async def function_wrapper(*args, **kwargs):
         self = args[0]
         function_result = "Функция не начала/не завершила выполнение"
+
+        if check_for_sql_injection(*args, **kwargs):
+            logging.warning(f"{func} c параметрами {args, kwargs} - обнаружена sql инъекция")
+
         try:
             async with sq_a.connect(self.db_filename) as db_connection_a:
                 self.con_a = db_connection_a
@@ -42,6 +48,10 @@ def connect_to_db_sync(func):
     def function_wrapper(*args, **kwargs):
         self = args[0]
         function_result = "Функция не начала/не завершила выполнение"
+
+        if check_for_sql_injection(*args, **kwargs):
+            logging.warning(f"{func} c параметрами {args, kwargs} - обнаружена sql инъекция")
+
         try:
             with sq_s.connect(self.db_filename) as db_connection_s:
                 self.con_s = db_connection_s
