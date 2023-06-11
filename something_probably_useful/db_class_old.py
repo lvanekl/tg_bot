@@ -15,7 +15,7 @@ def connect_to_db(func):
         function_result = "Функция не начала/не завершила выполнение"
         try:
             with sq.connect(self.db_filename) as db_connection:
-                self.cur = db_connection.cursor()
+                self.cur_a = db_connection.cursor()
                 function_result = func(*args, **kwargs)
                 logging.debug(f"Успешно отработала функция {func} c параметрами {args, kwargs}")
         except Exception as ex:
