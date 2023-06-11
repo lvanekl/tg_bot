@@ -1,3 +1,5 @@
+import random
+
 import asyncio
 import pytest
 # import logging
@@ -8,10 +10,9 @@ from env import TEST_DB_PATH, DEFAULT_WELCOME_MEME_PATH, \
     DEFAULT_CHAT_FUNNY_NO_FLAG, DEFAULT_CHAT_FUNNY_MAYBE_FLAG
 
 
-
 @pytest.mark.asyncio
 @pytest.mark.parametrize("chats_amount, tg_chats_ids", [(1, [11111]), (2, [1111, 2222]), (3, [111, 222, 333])])
-async def test_new_chat(chats_amount, tg_chats_ids):
+async def test_new_chat(chats_amount: int, tg_chats_ids: list):
     # Этот тест проверяет методы new_chat, get_chats, get_chat_settings
     my_db = DB(TEST_DB_PATH)
 
@@ -39,18 +40,18 @@ async def test_new_chat(chats_amount, tg_chats_ids):
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize("chat_id, kwargs", [(11111, {}),
-                                             (22222, {'welcome_meme': '1.jpg'}),
-                                             (33333, {'welcome_meme': ''}),
-                                             (44444, {'chat_GPT': 1, "funny_yes": 1, "funny_question": 0}),
-                                             (55555, {'chat_GPT': 0, "funny_yes": 0, "funny_question": 1})])
-async def test_edit_chat_settings(chat_id, kwargs):
+@pytest.mark.parametrize("chat_id, chat_settings", [(11111, {}),
+                                                    (22222, {'welcome_meme': '1.jpg'}),
+                                                    (33333, {'welcome_meme': ''}),
+                                                    (44444, {'chat_GPT': 1, "funny_yes": 1, "funny_question": 0}),
+                                                    (55555, {'chat_GPT': 0, "funny_yes": 0, "funny_question": 1})])
+async def test_edit_chat_settings(chat_id: int, chat_settings: dict):
     # Этот тест проверяет методы edit_chat_settings, get_chat_settings
     my_db = DB(TEST_DB_PATH)
     my_db.clear_all_tables()
     await my_db.new_chat(telegram_chat_id=chat_id)
 
-    await my_db.edit_chat_settings(chat_id, **kwargs)
+    await my_db.edit_chat_settings(chat_id, **chat_settings)
     settings = (await my_db.get_chat_settings(chat_id))[0]
 
     assert settings['chat'] == chat_id
@@ -58,26 +59,95 @@ async def test_edit_chat_settings(chat_id, kwargs):
     settings_edited_fields = {}
 
     for key, value in settings.items():
-        if key in kwargs:
+        if key in chat_settings:
             settings_edited_fields[key] = value
 
-    assert settings_edited_fields == kwargs
+    assert settings_edited_fields == chat_settings
     # думаю что все норм
     my_db.clear_all_tables()
 
 
-def test_add_get_remove_gym():
+@pytest.mark.asyncio
+@pytest.mark.parametrize("chat_id, gyms", [(1111, [{"name": "g1", "address": "a1"}, {"name": "g2", "address": "a2"}]),
+                                           (2222, [{"name": "g1", "address": "a1"}]),
+                                           (3333, [{"name": "g1", "address": ""}, {"name": "g2", "address": "a2"}]),
+                                           (4444, [{"name": "g1", "address": ""}, {"name": "g2", "address": "a2"},
+                                                   {"name": "g3", "address": "a3"}, {"name": "g4", "address": "a4"}])])
+async def test_add_get_remove_gym(chat_id: int, gyms: list):
     # Этот тест проверяет методы get_gyms, add_gym, remove_gym
     my_db = DB(TEST_DB_PATH)
     my_db.clear_all_tables()
 
+    gym_ids = []
+    for gym in gyms:
+        gym_id = (await my_db.add_gym(telegram_chat_id=chat_id, **gym))[0]
+        gym_ids.append(gym_id)
+        gym.update({'id': gym_id, 'chat': chat_id})
+
+    # залы добавлены в бд, теперь нужно их достать оттуда и проверить с тем, что должно быть
+    db_gyms = await my_db.get_gyms(telegram_chat_id=chat_id)
+    assert db_gyms == gyms
+    # допустим все правильно
+
+    # выберем залы чтобы их удалить и удалим (и из бд и из локального списка залов)
+    remove_gyms_amount = random.randint(1, len(gym_ids))
+    remove_gyms_ids = random.choices(gym_ids, k=remove_gyms_amount)
+
+    for rm_g_id in remove_gyms_ids:
+        # удаление из бд
+        await my_db.remove_gym(gym_id=rm_g_id)
+
+        # удаление из локального списка залов
+        gym_index = 0
+        while gym_index < len(gyms):
+            gym = gyms[gym_index]
+            if gym['id'] == rm_g_id:
+                del gyms[gym_index]
+            else:
+                gym_index += 1
+
+    db_gyms_after_remove = await my_db.get_gyms(telegram_chat_id=chat_id)
+    assert db_gyms_after_remove == gyms
+
     my_db.clear_all_tables()
 
 
-def test_edit_gym():
+@pytest.mark.asyncio
+@pytest.mark.parametrize("chat_id, gyms, edits", [
+                            (1111, [{"name": "g1", "address": "a1"}, {"name": "g2", "address": "a2"}],
+                                   [{"name": "g1-ch", "address": "a1-ch"}, {"name": "g2-ch", "address": "a2-ch"}]),
+                            (2222, [{"name": "g1", "address": "a1"}], [{"name": "g1-ch"}]),
+                            (3333, [{"name": "g1", "address": "a1"}], [{"address": "a1-ch"}])])
+async def test_edit_gym(chat_id, gyms, edits):
     # Этот тест проверяет методы get_gyms, add_gym, edit_gym
     my_db = DB(TEST_DB_PATH)
     my_db.clear_all_tables()
+
+    # добавим залы, проверим, что добавились
+    gym_ids = []
+    for gym in gyms:
+        gym_id = (await my_db.add_gym(telegram_chat_id=chat_id, **gym))[0]
+        gym_ids.append(gym_id)
+        gym.update({'id': gym_id, 'chat': chat_id})
+
+    # залы добавлены в бд, теперь нужно их достать оттуда и проверить с тем, что должно быть
+    db_gyms = await my_db.get_gyms(telegram_chat_id=chat_id)
+    assert db_gyms == gyms
+
+    # допустим все правильно, тогда меняем их в бд и локально согласно "edits"
+    for gym_index in range(len(gym_ids)):
+        # редактирование в бд
+        gym_id = gym_ids[gym_index]
+        await my_db.edit_gym(gym_id=gym_id, **(edits[gym_index]))
+
+        # изменение локального списка залов
+        gyms[gym_index].update(**(edits[gym_index]))
+
+    # залы отредактированы, теперь нужно их достать из бд и проверить с тем, что должно быть
+    db_gyms = await my_db.get_gyms(telegram_chat_id=chat_id)
+    assert db_gyms == gyms
+
+
 
     my_db.clear_all_tables()
 
