@@ -40,14 +40,14 @@ default_prompt = '''Я занимаюсь в спортсекции и я про
 Обязательно сделай перепроверку на грамматические, фактические и речевые ошибки.'''
 
 
-async def generate_poll(telegram_chat_id: int, date: Date, time: Time, place: str,
+async def generate_poll(telegram_chat_id: int, date: Date, time: Time, gym: str,
                         sport: str, chat_settings: dict, db_path: str) -> dict:
     funny_question, funny_yes_option, funny_maybe_option, funny_no_option, emoji = \
         chat_settings["funny_question"], chat_settings["funny_yes"], \
             chat_settings["funny_maybe"], chat_settings["funny_no"], chat_settings["emoji"]
 
     if any([funny_question, funny_yes_option, funny_maybe_option, funny_no_option]):
-        poll_variants = await generate_poll_variants_using_chat_GPT(date, time, place, sport)
+        poll_variants = await generate_poll_variants_using_chat_GPT(date, time, gym, sport)
         try:
             poll_variants = eval(poll_variants)
         except Exception as e:
@@ -63,25 +63,25 @@ async def generate_poll(telegram_chat_id: int, date: Date, time: Time, place: st
 
     if any([funny_question, funny_yes_option, funny_maybe_option, funny_no_option]):
         if funny_question:
-            poll["question"] += f" ({date}, {time}, {place})"
+            poll["question"] += f" ({date}, {time}, {gym})"
         else:
-            poll["question"] = generate_default_question(date=date, time=time, place=place)
+            poll["question"] = generate_default_question(date=date, time=time, gym=gym)
 
         if not funny_yes_option:
-            poll["options"][0] = generate_default_yes_option(date=date, time=time, place=place)
+            poll["options"][0] = generate_default_yes_option(date=date, time=time, gym=gym)
         if not funny_maybe_option:
-            poll["options"][1] = generate_default_maybe_option(date=date, time=time, place=place)
+            poll["options"][1] = generate_default_maybe_option(date=date, time=time, gym=gym)
         if not funny_no_option:
-            poll["options"][2] = generate_default_no_option(date=date, time=time, place=place)
+            poll["options"][2] = generate_default_no_option(date=date, time=time, gym=gym)
 
     return poll
 
 
-async def generate_poll_variants_using_chat_GPT(date: Date, time: Time, place: str, sport: str = "любой") -> str:
+async def generate_poll_variants_using_chat_GPT(date: Date, time: Time, gym: str, sport: str = "любой") -> str:
     prompt = default_prompt
     if sport is not None:
         prompt += f". ВАЖНО: вид спорта - {sport}, поэтому не используй другие виды спорта в генерации. " \
-                  f"Кстати тренировка будет {date} в {time} в зале {place} - если захочешь, " \
+                  f"Кстати тренировка будет {date} в {time} в зале {gym} - если захочешь, " \
                   f"можешь использовать эти параметры в ответах"
 
     response = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}],
@@ -125,17 +125,17 @@ def add_emoji(poll_variants: dict) -> dict:
     return poll_variants
 
 
-def generate_default_question(date: Date, time: Time, place: str) -> str:
-    templates = [f"Прийдете {date} в {time} на тренировку в {place}?",
-                 f"Как насчет тренировки в {place} ({date} в {time})?",
-                 f"Перекличка на тренировку в {place} ({date} в {time})?",
-                 f"Какие планы на вечер {date}? Есть опция собраться в {place} в {time}"]
+def generate_default_question(date: Date, time: Time, gym: str) -> str:
+    templates = [f"Прийдете {date} в {time} на тренировку в {gym}?",
+                 f"Как насчет тренировки в {gym} ({date} в {time})?",
+                 f"Перекличка на тренировку в {gym} ({date} в {time})?",
+                 f"Какие планы на вечер {date}? Есть опция собраться в {gym} в {time}"]
 
     return random.choice(templates)
 
 
-def generate_default_yes_option(date: Date, time: Time, place: str) -> str:
-    templates = [f"Тренируюсь в {place}",
+def generate_default_yes_option(date: Date, time: Time, gym: str) -> str:
+    templates = [f"Тренируюсь в {gym}",
                  f"Прийду",
                  f"+1",
                  f"Поддержу тренировку своим присутствием"]
@@ -143,7 +143,7 @@ def generate_default_yes_option(date: Date, time: Time, place: str) -> str:
     return random.choice(templates)
 
 
-def generate_default_no_option(date: Date, time: Time, place: str) -> str:
+def generate_default_no_option(date: Date, time: Time, gym: str) -> str:
     templates = [f"Не прийду",
                  f"Занят чем-то бессмысленным и бесполезным",
                  f"Я ужасный человек и не иду сегодня на тренировку",
@@ -153,7 +153,7 @@ def generate_default_no_option(date: Date, time: Time, place: str) -> str:
     return random.choice(templates)
 
 
-def generate_default_maybe_option(date: Date, time: Time, place: str) -> str:
+def generate_default_maybe_option(date: Date, time: Time, gym: str) -> str:
     templates = [f"Пока в раздумьях",
                  f"Еще не решил",
                  f"хз",
@@ -172,7 +172,7 @@ async def main():
                      "funny_no": True, "emoji": True}
     date = Date.today()
     time = Time(hour=19, minute=34)
-    place = "Акроритм"
+    gym = "Акроритм"
     sport = "Спортивная гимнастика"
 
     my_db.clear_all_tables()
@@ -183,7 +183,7 @@ async def main():
     await my_db.add_answer_alternative(telegram_chat_id=telegram_chat_id, answer_type="maybe", answer_value="Мб")
     await my_db.add_answer_alternative(telegram_chat_id=telegram_chat_id, answer_type="no", answer_value="Нет")
 
-    print(await generate_poll(telegram_chat_id, date=date, time=time, place=place,
+    print(await generate_poll(telegram_chat_id, date=date, time=time, gym=gym,
                               chat_settings=chat_settings, sport=sport, db_path=db_path))
     my_db.clear_all_tables()
 
