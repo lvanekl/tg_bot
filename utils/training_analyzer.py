@@ -6,14 +6,11 @@ from datetime import time as Time, date as Date
 
 
 @load_test_data
-async def analyze_schedule_today(telegram_chat_id: int, db_path: str) -> list:
-    my_db = DB(db_path)
-    all_planned_trainigs = await my_db.get_schedule(telegram_chat_id=telegram_chat_id)
-    all_corrections = await my_db.get_schedule_corrections(telegram_chat_id=telegram_chat_id)
+async def analyze_schedule_today(telegram_chat_id: int, all_planned_trainigs: list, all_corrections: list) -> list:
     all_corrections.sort(key=lambda x: x["date_created"])
 
     today = Date.today()
-    current_weekday = today.weekday() + 1
+    current_weekday = today.weekday()
 
     today_planned_trainings = [tr for tr in all_planned_trainigs if tr['weekday'] == current_weekday]
 
@@ -64,7 +61,7 @@ async def clear_expired_schedule_corrections(db_path: str):
     counter = 0
     for chat in chats:
         t_i = chat['telegram_chat_id']
-        schedule_corrections = my_db.get_schedule_corrections(telegram_chat_id=t_i)
+        schedule_corrections = await my_db.get_schedule_corrections(telegram_chat_id=t_i)
         for sch_c in schedule_corrections:
             if sch_c['old_date'] < today and sch_c['new_date'] < today:
                 await my_db.remove_schedule_correction(schedule_correction_id=sch_c['id'])
