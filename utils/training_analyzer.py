@@ -48,7 +48,7 @@ async def analyze_schedule_today(telegram_chat_id: int, all_planned_trainigs: li
                                                 'sport': 'любой',
                                                 'gym': cor['new_gym'], 'time': cor['new_time']})
 
-    today_planned_trainings = [dict(s) for s in set(frozenset(d.items()) for d in today_planned_trainings)]
+    today_planned_trainings = [dict(s).update({'date': today}) for s in set(frozenset(d.items()) for d in today_planned_trainings)]
 
     return today_planned_trainings
 
