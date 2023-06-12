@@ -19,34 +19,34 @@ async def analyze_schedule_today(telegram_chat_id: int, all_planned_trainigs: li
             if cor['old_date'] == today and cor['new_date'] == today:
                 for tr in today_planned_trainings:
                     # если день остается тот же (и это сегодня), то проверяем, что старые время и место те же самые
-                    if tr['time'] == cor['old_time'] and tr['place'] == cor['old_place']:
+                    if tr['time'] == cor['old_time'] and tr['gym'] == cor['old_gym']:
                         tr['time'] = cor['new_time']
-                        tr['place'] = cor['new_place']
+                        tr['gym'] = cor['new_gym']
             elif cor['new_date'] == today:
                 for tr in all_planned_trainigs:
                     if tr['time'] == cor['old_time'] \
-                            and tr['place'] == cor['old_place'] \
+                            and tr['gym'] == cor['old_gym'] \
                             and tr['weekday'] == cor['old_date'].weekday():
                         # если тренировка которую переносят на сегодня вообще была
                         # (старые дата [день недели], место, время указаны правильно)
                         today_planned_trainings.append({'id': None, 'chat': telegram_chat_id,
                                                         'sport': tr['sport'],
-                                                        'gym': cor['new_place'], 'time': cor['new_time']})
+                                                        'gym': cor['new_gym'], 'time': cor['new_time']})
             elif cor['old_date'] == today:
                 for tr in today_planned_trainings:
-                    if tr['time'] == cor['old_time'] and tr['place'] == cor['old_place']:
+                    if tr['time'] == cor['old_time'] and tr['gym'] == cor['old_gym']:
                         del tr
 
         elif cor['correction_type'] == 'remove':
             if cor['old_date'] == today:
                 for tr in today_planned_trainings:
-                    if tr['time'] == cor['old_time'] and tr['place'] == cor['old_place']:
+                    if tr['time'] == cor['old_time'] and tr['gym'] == cor['old_gym']:
                         del tr
         elif cor['correction_type'] == 'add':
             if cor['new_date'] == today:
                 today_planned_trainings.append({'id': None, 'chat': telegram_chat_id,
                                                 'sport': 'любой',
-                                                'gym': cor['new_place'], 'time': cor['new_time']})
+                                                'gym': cor['new_gym'], 'time': cor['new_time']})
 
     today_planned_trainings = [dict(s) for s in set(frozenset(d.items()) for d in today_planned_trainings)]
 
