@@ -1,4 +1,5 @@
 import os
+from datetime import time as Time
 
 token = ""
 openai_token = ""
@@ -9,6 +10,7 @@ DEFAULT_CHAT_FUNNY_QUESTION_FLAG = 0
 DEFAULT_CHAT_FUNNY_YES_FLAG = 0
 DEFAULT_CHAT_FUNNY_MAYBE_FLAG = 0
 DEFAULT_CHAT_FUNNY_NO_FLAG = 0
+DEFAULT_SCHEDULE_SEND_TIME = Time(hour=7)
 
 TEST_DB_PATH = 'db/test.sqlite3'
 DB_PATH = 'db/db.sqlite3'
