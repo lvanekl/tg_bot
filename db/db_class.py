@@ -6,9 +6,10 @@ from datetime import time as Time, date as Date, datetime as Datetime
 
 from env import DEFAULT_WELCOME_MEME_PATH, DEFAULT_CHAT_FUNNY_QUESTION_FLAG, \
     DEFAULT_CHAT_FUNNY_YES_FLAG, DEFAULT_CHAT_FUNNY_MAYBE_FLAG, DEFAULT_CHAT_FUNNY_NO_FLAG, \
-    DEFAULT_AUTO_POLL_FLAG, DEFAULT_POLL_SEND_TIME
+    DEFAULT_AUTO_POLL_FLAG, DEFAULT_POLL_SEND_TIME, LOG_PATH
 
-
+logging.basicConfig(level=logging.INFO, filename=LOG_PATH, filemode="w",
+                    format="%(asctime)s %(levelname)s %(message)s", encoding='utf-8')
 
 def dict_factory(cursor, row):
     fields = [column[0] for column in cursor.description]

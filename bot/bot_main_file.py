@@ -1,19 +1,34 @@
-from env import telegram_token, DB_PATH
+import asyncio
+from aiogram.types import InputFile
+
+from env import telegram_token, DB_PATH, NEW_CHAT_MEME_PATH
 from aiogram import Bot, types, executor, Dispatcher
 
 from db.db_class import DB
-from messages import *
+from bot.messages import *
 
-bot = Bot(token=telegram_token)
-dp = Dispatcher(bot)
+my_bot = Bot(token=telegram_token)
+dp = Dispatcher(my_bot)
 my_db = DB(DB_PATH)
 
 
 @dp.message_handler(commands=["start"])
 async def start(message: types.Message):
-    print(locals())
-    await message.answer('''he-he lessgoooo ''')
-    # TODO
+    chat_id = message.chat.id
+
+    all_chats = await my_db.get_chats()
+    for chat in all_chats:
+        if chat['telegram_chat_id'] == chat_id:
+            await message.answer("Ваш чат уже был добавлен в базу данных ранее и сейчас все должно работать корректно. \
+                                \n\nЕсли чето сломалось напишите плз разработчику /feedback_help \
+                                \n\nЕсли вы запутались в работе бота можете попробовать кликнуть /help")
+            return
+
+    await my_db.new_chat(telegram_chat_id=chat_id)
+
+    photo = InputFile(NEW_CHAT_MEME_PATH)
+    await my_bot.send_photo(chat_id=message.chat.id, photo=photo)
+    await message.answer('''he-he lessgoooo... Тоесть... всем привет!) Чтобы узнать что я умею кликните /help''')
 
 
 @dp.message_handler(commands=["help", "conception_explanation", "gyms_help", "schedule_help",
@@ -31,12 +46,15 @@ async def help_function(message: types.Message):
     await message.answer(help_messages[command], parse_mode='HTML')
 
 
-async def run_bot():
+def run_bot():
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
     executor.start_polling(dp)
 
 
 if __name__ == "__main__":
     run_bot()
+
 # при добавлении в чат - функция new_chat и вывести текущие настройки
 
 # TODO
