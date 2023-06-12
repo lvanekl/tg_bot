@@ -134,7 +134,7 @@ class DbTableManager:
         "schedule": '''CREATE TABLE IF NOT EXISTS "schedule" (
     	"id"	INTEGER NOT NULL UNIQUE,
     	"chat"	INTEGER NOT NULL,
-    	"weekday"	INTEGER NOT NULL CHECK("weekday" >= 1 AND "weekday" <= 7),
+    	"weekday"	INTEGER NOT NULL CHECK("weekday" >= 0 AND "weekday" <= 6),
     	"sport"	TEXT NOT NULL,
     	"gym"	INTEGER NOT NULL,
     	"time"	TEXT NOT NULL,
