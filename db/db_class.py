@@ -1,15 +1,13 @@
 import aiosqlite as sq_a
 import sqlite3 as sq_s
-import logging
 
+import logging
 from datetime import time as Time, date as Date, datetime as Datetime
 
-from env import DB_LOG_PATH, DEFAULT_WELCOME_MEME_PATH, DEFAULT_CHAT_FUNNY_QUESTION_FLAG, \
+from env import DEFAULT_WELCOME_MEME_PATH, DEFAULT_CHAT_FUNNY_QUESTION_FLAG, \
     DEFAULT_CHAT_FUNNY_YES_FLAG, DEFAULT_CHAT_FUNNY_MAYBE_FLAG, DEFAULT_CHAT_FUNNY_NO_FLAG, \
     DEFAULT_AUTO_POLL_FLAG, DEFAULT_POLL_SEND_TIME
 
-logging.basicConfig(level=logging.DEBUG, filename=DB_LOG_PATH, filemode="w",
-                    format="%(asctime)s %(levelname)s %(message)s", encoding='utf-8')
 
 
 def dict_factory(cursor, row):
@@ -116,7 +114,7 @@ class DbTableManager:
     	"funny_yes"	INTEGER DEFAULT "{DEFAULT_CHAT_FUNNY_YES_FLAG}",
     	"funny_no"	INTEGER DEFAULT "{DEFAULT_CHAT_FUNNY_NO_FLAG}",
     	"funny_maybe"	INTEGER DEFAULT "{DEFAULT_CHAT_FUNNY_MAYBE_FLAG}",
-    	"poll_send_time" TEXT DEFAULT {DEFAULT_POLL_SEND_TIME}
+    	"poll_send_time" TEXT DEFAULT "{DEFAULT_POLL_SEND_TIME}",
     	FOREIGN KEY("chat") REFERENCES "chat"("telegram_chat_id") ON DELETE CASCADE
     )''',
         "gym": '''CREATE TABLE IF NOT EXISTS "gym" (
