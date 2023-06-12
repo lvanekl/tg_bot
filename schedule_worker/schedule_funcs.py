@@ -16,9 +16,10 @@ db_path = DB_PATH
 
 async def start_scheduling():
     schedule.every().day.at('00:00').do(everyday_schedule_analyzer)
-    # while True:
-    #     print(datetime.now())
-    #     await asyncio.sleep(1)
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
+        print(datetime.now())
 
 
 async def everyday_schedule_analyzer():
