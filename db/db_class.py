@@ -5,7 +5,8 @@ import logging
 from datetime import time as Time, date as Date, datetime as Datetime
 
 from env import DB_LOG_PATH, DEFAULT_WELCOME_MEME_PATH, DEFAULT_CHAT_FUNNY_QUESTION_FLAG, \
-    DEFAULT_CHAT_FUNNY_YES_FLAG, DEFAULT_CHAT_FUNNY_MAYBE_FLAG, DEFAULT_CHAT_FUNNY_NO_FLAG
+    DEFAULT_CHAT_FUNNY_YES_FLAG, DEFAULT_CHAT_FUNNY_MAYBE_FLAG, DEFAULT_CHAT_FUNNY_NO_FLAG,\
+    DEFAULT_AUTO_POLL_FLAG
 
 logging.basicConfig(level=logging.DEBUG, filename=DB_LOG_PATH, filemode="w",
                     format="%(asctime)s %(levelname)s %(message)s", encoding='utf-8')
@@ -110,6 +111,7 @@ class DbTableManager:
         "chat_settings": f'''CREATE TABLE IF NOT EXISTS "chat_settings" (
     	"chat"	INTEGER NOT NULL UNIQUE,
     	"welcome_meme"	TEXT DEFAULT "{DEFAULT_WELCOME_MEME_PATH}",
+    	"auto_poll"	INTEGER DEFAULT "{DEFAULT_AUTO_POLL_FLAG}",
     	"funny_question"	INTEGER DEFAULT "{DEFAULT_CHAT_FUNNY_QUESTION_FLAG}",
     	"funny_yes"	INTEGER DEFAULT "{DEFAULT_CHAT_FUNNY_YES_FLAG}",
     	"funny_no"	INTEGER DEFAULT "{DEFAULT_CHAT_FUNNY_NO_FLAG}",
