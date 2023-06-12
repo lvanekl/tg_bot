@@ -116,7 +116,7 @@ class DbTableManager:
     	"funny_yes"	INTEGER DEFAULT "{DEFAULT_CHAT_FUNNY_YES_FLAG}",
     	"funny_no"	INTEGER DEFAULT "{DEFAULT_CHAT_FUNNY_NO_FLAG}",
     	"funny_maybe"	INTEGER DEFAULT "{DEFAULT_CHAT_FUNNY_MAYBE_FLAG}",
-    	"default_poll_send_time" TEXT DEFAULT {DEFAULT_POLL_SEND_TIME}
+    	"poll_send_time" TEXT DEFAULT {DEFAULT_POLL_SEND_TIME}
     	FOREIGN KEY("chat") REFERENCES "chat"("telegram_chat_id") ON DELETE CASCADE
     )''',
         "gym": '''CREATE TABLE IF NOT EXISTS "gym" (
