@@ -1,6 +1,7 @@
 import json
 import random
 
+import asyncio
 import logging
 import openai
 
@@ -40,14 +41,17 @@ default_prompt = '''Я занимаюсь в спортсекции и я про
 Обязательно сделай перепроверку на грамматические, фактические и речевые ошибки.'''
 
 
-async def generate_poll(telegram_chat_id: int, date: Date, time: Time, gym: str,
-                        sport: str, chat_settings: dict, db_path: str) -> dict:
+async def generate_poll(telegram_chat_id: int, chat_settings: dict, training: dict, db_path: str) -> dict:
+
+    date, time, gym, sport = training['date'], training['time'], training['gym'], training['sport']
+
     funny_question, funny_yes_option, funny_maybe_option, funny_no_option, emoji = \
         chat_settings["funny_question"], chat_settings["funny_yes"], \
             chat_settings["funny_maybe"], chat_settings["funny_no"], chat_settings["emoji"]
 
     if any([funny_question, funny_yes_option, funny_maybe_option, funny_no_option]):
-        poll_variants = await generate_poll_variants_using_chat_GPT(date, time, gym, sport)
+        loop = asyncio.get_event_loop()
+        poll_variants = generate_poll_variants_using_chat_GPT(date, time, gym, sport)
         try:
             poll_variants = eval(poll_variants)
         except Exception as e:
@@ -77,7 +81,7 @@ async def generate_poll(telegram_chat_id: int, date: Date, time: Time, gym: str,
     return poll
 
 
-async def generate_poll_variants_using_chat_GPT(date: Date, time: Time, gym: str, sport: str = "любой") -> str:
+def generate_poll_variants_using_chat_GPT(date: Date, time: Time, gym: str, sport: str = "любой") -> str:
     prompt = default_prompt
     if sport is not None:
         prompt += f". ВАЖНО: вид спорта - {sport}, поэтому не используй другие виды спорта в генерации. " \
@@ -86,8 +90,8 @@ async def generate_poll_variants_using_chat_GPT(date: Date, time: Time, gym: str
 
     response = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}],
                                             max_tokens=2700)
-    content = str(response)
-    return json.loads(content)["choices"][0]["message"]["content"]
+    response = str(response)
+    return json.loads(response)["choices"][0]["message"]["content"]
 
 
 async def generate_poll_variants_using_db(telegram_chat_id: int, db_path: str) -> dict:
@@ -175,6 +179,8 @@ async def main():
     gym = "Акроритм"
     sport = "Спортивная гимнастика"
 
+    training = {"date": date, "time": time, "gym": gym, "sport": sport}
+
     my_db.clear_all_tables()
     await my_db.new_chat(telegram_chat_id)
     await my_db.add_answer_alternative(telegram_chat_id=telegram_chat_id, answer_type="question",
@@ -183,8 +189,8 @@ async def main():
     await my_db.add_answer_alternative(telegram_chat_id=telegram_chat_id, answer_type="maybe", answer_value="Мб")
     await my_db.add_answer_alternative(telegram_chat_id=telegram_chat_id, answer_type="no", answer_value="Нет")
 
-    print(await generate_poll(telegram_chat_id, date=date, time=time, gym=gym,
-                              chat_settings=chat_settings, sport=sport, db_path=db_path))
+    print(await generate_poll(telegram_chat_id,
+                              chat_settings=chat_settings, training=training, db_path=db_path))
     my_db.clear_all_tables()
 
 
