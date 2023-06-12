@@ -19,6 +19,7 @@ def dict_factory(cursor, row):
 def check_for_sql_injection(*args, **kwargs):
     # возможно эта функция избыточна. Я прочитал в интернете, что cur.execute("...?...", (arg1, arg2, ...))
     # уже дает проверку на sql инъекции, а у меня почти все написано через него
+    # TODO
     pass
 
 
