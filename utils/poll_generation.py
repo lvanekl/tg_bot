@@ -6,7 +6,7 @@ import logging
 import openai
 
 from db.db_class import DB
-from env import openai_token, DB_PATH, TEST_DB_PATH
+from env import openai_token
 from datetime import date as Date, time as Time
 
 openai.api_key = openai_token
@@ -41,8 +41,8 @@ default_prompt = '''Я занимаюсь в спортсекции и я про
 Обязательно сделай перепроверку на грамматические, фактические и речевые ошибки.'''
 
 
-async def generate_poll(telegram_chat_id: int, chat_settings: dict, training: dict, db_path: str) -> dict:
-
+async def generate_poll(telegram_chat_id: int, chat_settings: dict, training: dict, my_db: DB) -> dict:
+    print('hehehe')
     date, time, gym, sport = training['date'], training['time'], training['gym'], training['sport']
 
     funny_question, funny_yes_option, funny_maybe_option, funny_no_option, emoji = \
@@ -58,7 +58,7 @@ async def generate_poll(telegram_chat_id: int, chat_settings: dict, training: di
             logging.error(e)
             poll_variants = {}
     else:
-        poll_variants = await generate_poll_variants_using_db(telegram_chat_id, db_path=db_path)
+        poll_variants = await generate_poll_variants_using_db(telegram_chat_id, my_db=my_db)
 
     poll = choose_poll_variant(poll_variants)
 
@@ -94,8 +94,7 @@ def generate_poll_variants_using_chat_GPT(date: Date, time: Time, gym: str, spor
     return json.loads(response)["choices"][0]["message"]["content"]
 
 
-async def generate_poll_variants_using_db(telegram_chat_id: int, db_path: str) -> dict:
-    my_db = DB(db_path)
+async def generate_poll_variants_using_db(telegram_chat_id: int, my_db: DB) -> dict:
     answer_alternatives_grouped_by_types = \
         await my_db.get_answer_alternatives_grouped_by_types(telegram_chat_id=telegram_chat_id)
 
@@ -168,7 +167,7 @@ def generate_default_maybe_option(date: Date, time: Time, gym: str) -> str:
 
 async def main():
     # функция для тестирования генерируемых ответов
-    db_path = TEST_DB_PATH
+    db_path = ...
     my_db = DB(db_path)
 
     telegram_chat_id = 1111

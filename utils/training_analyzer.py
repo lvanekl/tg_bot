@@ -53,8 +53,7 @@ async def analyze_schedule_today(telegram_chat_id: int, all_planned_trainigs: li
     return today_planned_trainings
 
 
-async def clear_expired_schedule_corrections(db_path: str):
-    my_db = DB(db_path)
+async def clear_expired_schedule_corrections(my_db: DB):
     chats = await my_db.get_chats()
     today = Date.today()
 
