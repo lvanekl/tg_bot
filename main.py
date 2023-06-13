@@ -30,13 +30,6 @@ async def main():
 
     except Exception as e:
         raise e
-    # bot_thread = threading.Thread(target=asyncio.run, args=(my_bot.run_bot_(), ))
-    # bot_thread.start()
-    # bot_thread.join()
-
-    # my_bot.loop.run_forever()
-    # my_sch.loop.run_forever()
-    # loop.run_forever()
 
 
 if __name__ == '__main__':

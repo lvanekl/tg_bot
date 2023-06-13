@@ -6,7 +6,7 @@ from datetime import time as Time, date as Date, datetime as Datetime
 
 from env import DEFAULT_WELCOME_MEME_PATH, DEFAULT_CHAT_FUNNY_QUESTION_FLAG, \
     DEFAULT_CHAT_FUNNY_YES_FLAG, DEFAULT_CHAT_FUNNY_MAYBE_FLAG, DEFAULT_CHAT_FUNNY_NO_FLAG, \
-    DEFAULT_AUTO_POLL_FLAG, DEFAULT_POLL_SEND_TIME, LOG_PATH
+    DEFAULT_AUTO_POLL_FLAG, DEFAULT_POLL_SEND_TIME, LOG_PATH, DEFAULT_CHAT_EMOJI_FLAG, DEFAULT_LANGUAGE
 
 logging.basicConfig(level=logging.INFO, filename=LOG_PATH, filemode="w",
                     format="%(asctime)s %(levelname)s %(message)s", encoding='utf-8')
@@ -93,14 +93,14 @@ class DbTableManager:
     	"chat"	INTEGER NOT NULL,
     	"telegram_user_id"	INTEGER NOT NULL,
     	PRIMARY KEY("id" AUTOINCREMENT),
-    	FOREIGN KEY("chat") REFERENCES "chat"("id") ON DELETE CASCADE
+    	FOREIGN KEY("chat") REFERENCES "chat"("telegram_chat_id") ON DELETE CASCADE
     )''',
         "answer_alternative": '''CREATE TABLE IF NOT EXISTS "answer_alternative" (
     	"id"	INTEGER NOT NULL UNIQUE,
     	"chat"	INTEGER NOT NULL,
     	"type"	TEXT NOT NULL,
     	"value"	TEXT NOT NULL,
-    	FOREIGN KEY("chat") REFERENCES "chat"("id") ON DELETE CASCADE,
+    	FOREIGN KEY("chat") REFERENCES "chat"("telegram_chat_id") ON DELETE CASCADE,
     	PRIMARY KEY("id" AUTOINCREMENT)
     )''',
         "chat": '''CREATE TABLE IF NOT EXISTS "chat" (
@@ -116,6 +116,8 @@ class DbTableManager:
     	"funny_no"	INTEGER DEFAULT "{DEFAULT_CHAT_FUNNY_NO_FLAG}",
     	"funny_maybe"	INTEGER DEFAULT "{DEFAULT_CHAT_FUNNY_MAYBE_FLAG}",
     	"poll_send_time" TEXT DEFAULT "{DEFAULT_POLL_SEND_TIME}",
+    	"emoji" TEXT DEFAULT "{DEFAULT_CHAT_EMOJI_FLAG}",
+    	"language" TEXT DEFAULT "{DEFAULT_LANGUAGE}",
     	FOREIGN KEY("chat") REFERENCES "chat"("telegram_chat_id") ON DELETE CASCADE
     )''',
         "gym": '''CREATE TABLE IF NOT EXISTS "gym" (
@@ -124,7 +126,7 @@ class DbTableManager:
     	"name"	TEXT NOT NULL,
     	"address"	TEXT,
     	PRIMARY KEY("id" AUTOINCREMENT),
-    	FOREIGN KEY("chat") REFERENCES "chat"("id") ON DELETE CASCADE
+    	FOREIGN KEY("chat") REFERENCES "chat"("telegram_chat_id") ON DELETE CASCADE
     )''',
         "meme": '''CREATE TABLE IF NOT EXISTS "meme" (
     	"id"	INTEGER NOT NULL UNIQUE,
@@ -156,7 +158,7 @@ class DbTableManager:
     	"new_time"	TEXT,
     	"new_gym"	INTEGER,
     	PRIMARY KEY("id" AUTOINCREMENT),
-    	FOREIGN KEY("chat") REFERENCES "chat"("id") ON DELETE CASCADE,
+    	FOREIGN KEY("chat") REFERENCES "chat"("telegram_chat_id") ON DELETE CASCADE,
     	FOREIGN KEY("new_gym") REFERENCES "gym"("id") ON DELETE CASCADE,
     	FOREIGN KEY("old_gym") REFERENCES "gym"("id") ON DELETE CASCADE
     )'''

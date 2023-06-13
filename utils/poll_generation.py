@@ -1,3 +1,4 @@
+import datetime
 import json
 import random
 
@@ -6,24 +7,27 @@ import logging
 import openai
 
 from db.db_class import DB
-from env import openai_token
+from env import openai_token, LOG_PATH
 from datetime import date as Date, time as Time
 
 openai.api_key = openai_token
+
+logging.basicConfig(level=logging.DEBUG, filename=LOG_PATH, filemode="w",
+                    format="%(asctime)s %(levelname)s %(message)s", encoding='utf-8')
 
 default_prompt = '''Я занимаюсь в спортсекции и я провожу голосование о сегодняшней тренировке, 
 чтобы люди могли отметить планируют ли они сегодня прийти. По смыслу варианты ответа следующие: да, нет, не знаю. 
 Твоя задача придумать вопрос и замены этим вариантам ответов, чтобы опросы не были однообразными. Атмосфера дружеская и в чате приветствуются подколы вплоть до самых жестких. 
 Нужны варианты ответов в максимально шутливой форме - выдавай самые абсурдные и абстрактные варианты. Как можно меньше пафоса.
-Запретные темы: тренер, пот, подружки, вторая половинка, энергетический напиток, железо, шест, всплыть, одна рука, вес, футбол. Я хочу получить ответ в формате json:
+. Я хочу получить ответ в формате json:
 {"question": ["", "", ""], "yes": ["", "", ""], "maybe": ["", "", ""], "no": ["", "", ""], ]}. 
 Вот тебе примеры хороших вариантов,  {
-  "да": [
+  "yes": [
     "Я приду и покажу всем, как сделать отжимание на одной руке, держа бутерброд в другой",
     "Да, сегодня я буду участвовать в спортивной эпопее!",
     "Да, я настроен так серьезно, что мои мышцы уже начали набирать массу, только думая об этой тренировке!",
   ],
-  "нет": [
+  "no": [
     "Не сегодня, я решил(а) превратиться в картофельное чипсовое лежебоко",
     "Нет, я официально объявляю себя чемпионом по совмещению диванной и телевизионной гимнастики",
     "Я собираюсь сидеть и вынашивать новые спортивные идеи в покое.",
@@ -31,7 +35,7 @@ default_prompt = '''Я занимаюсь в спортсекции и я про
     "Сегодня я не приду, потому что меня похитили пришельцы и они требуют, чтобы я им показал, как пропускать тренировки.",
     "Нет, сегодня я занят чем-то ненужным и бессмысленным".
   ],
-  "не знаю": [
+  "maybe": [
     "Я на грани решения между тренировкой и занятием мастерством подушечного боя",
     "Моя предвыборная кампания между тренировкой и отдыхом зависит от победы апатии или энтузиазма."
   ]
@@ -51,7 +55,7 @@ async def generate_poll(telegram_chat_id: int, chat_settings: dict, training: di
 
     if any([funny_question, funny_yes_option, funny_maybe_option, funny_no_option]):
         loop = asyncio.get_event_loop()
-        poll_variants = generate_poll_variants_using_chat_GPT(date, time, gym, sport)
+        poll_variants = generate_poll_variants_using_chat_GPT(date, time, gym, sport, chat_settings)
         try:
             poll_variants = eval(poll_variants)
         except Exception as e:
@@ -60,8 +64,10 @@ async def generate_poll(telegram_chat_id: int, chat_settings: dict, training: di
     else:
         poll_variants = await generate_poll_variants_using_db(telegram_chat_id, my_db=my_db)
 
+    print(poll_variants, datetime.datetime.now())
     poll = choose_poll_variant(poll_variants)
 
+    print(poll, datetime.datetime.now())
     if emoji:
         poll = add_emoji(poll)
 
@@ -81,12 +87,12 @@ async def generate_poll(telegram_chat_id: int, chat_settings: dict, training: di
     return poll
 
 
-def generate_poll_variants_using_chat_GPT(date: Date, time: Time, gym: str, sport: str = "любой") -> str:
+def generate_poll_variants_using_chat_GPT(date: Date, time: Time, gym: str, chat_settings: dict, sport: str = "любой") -> str:
     prompt = default_prompt
     if sport is not None:
         prompt += f". ВАЖНО: вид спорта - {sport}, поэтому не используй другие виды спорта в генерации. " \
                   f"Кстати тренировка будет {date} в {time} в зале {gym} - если захочешь, " \
-                  f"можешь использовать эти параметры в ответах"
+                  f"можешь использовать эти параметры в ответах. Язык на котором должны быть сгенерированы ответы - {chat_settings['language']}"
 
     response = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}],
                                             max_tokens=2700)

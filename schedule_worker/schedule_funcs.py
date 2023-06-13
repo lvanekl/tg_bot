@@ -8,9 +8,9 @@ from bot.bot_main_file import MyBot
 from db.db_class import DB
 from utils.poll_generation import generate_poll
 from utils.training_analyzer import analyze_schedule_today, clear_expired_schedule_corrections
-from env import LOG_PATH, SCHEDULE_CHECK_RUN_TIME
+from env import LOG_PATH, SCHEDULE_CHECK_RUN_TIME, DEFAULT_POLL_SEND_TIME
 
-from datetime import time as Time, datetime as Datetime
+from datetime import time as Time, datetime as Datetime, timedelta
 
 logging.basicConfig(level=logging.INFO, filename=LOG_PATH, filemode="w",
                     format="%(asctime)s %(levelname)s %(message)s", encoding='utf-8')
@@ -50,7 +50,7 @@ class MyScheduleClass:
             if chat_settings['auto_poll']:
                 await self.single_chat_analyze_and_send_poll(chat=chat, chat_settings=chat_settings,
                                                              # send_time=chat_settings['poll_send_time'],
-                                                             send_time=Datetime.now().time(), )
+                                                             send_time=DEFAULT_POLL_SEND_TIME, )
         await clear_expired_schedule_corrections(my_db=self.my_db)
 
     async def single_chat_analyze_and_send_poll(self, chat: dict, chat_settings: dict, send_time: Time):

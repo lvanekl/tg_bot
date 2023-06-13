@@ -4,8 +4,6 @@ from testing.some_testing_utils import load_test_data
 from datetime import time as Time, date as Date
 
 
-
-@load_test_data
 async def analyze_schedule_today(telegram_chat_id: int, all_planned_trainigs: list, all_corrections: list) -> list:
     all_corrections.sort(key=lambda x: x["date_created"])
 
@@ -48,7 +46,8 @@ async def analyze_schedule_today(telegram_chat_id: int, all_planned_trainigs: li
                                                 'sport': 'любой',
                                                 'gym': cor['new_gym'], 'time': cor['new_time']})
 
-    today_planned_trainings = [dict(s).update({'date': today}) for s in set(frozenset(d.items()) for d in today_planned_trainings)]
+    today_planned_trainings = [{**dict(s), 'date': today} for s in
+                               set(frozenset(d.items()) for d in today_planned_trainings)]
 
     return today_planned_trainings
 
@@ -69,5 +68,5 @@ async def clear_expired_schedule_corrections(my_db: DB):
     return f"Удалено {counter} устаревших поправок в расписание"
 
 
-if __name__ == "__main__":
-    analyze_schedule_today(telegram_chat_id=1111111)
+# if __name__ == "__main__":
+#     analyze_schedule_today(telegram_chat_id=1111111)
