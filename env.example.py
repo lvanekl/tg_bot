@@ -16,3 +16,6 @@ DEFAULT_POLL_SEND_TIME = Time(hour=7)
 TEST_DB_PATH = 'db/test.sqlite3'
 DB_PATH = 'db/db.sqlite3'
 LOG_PATH = os.path.join('logs', 'log.log')
+
+DEVELOPER_TELEGRAM_ID = 0
+SCHEDULE_CHECK_RUN_TIME = Time(hour=1, minute=41)
