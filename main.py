@@ -13,12 +13,17 @@ import threading
 
 
 def main():
-    schedule_thread = threading.Thread(target=asyncio.run, args=(start_scheduling(),))
-    schedule_thread.start()
+    loop = asyncio.get_event_loop()
 
-    bot_thread = threading.Thread(target=run_bot)
-    bot_thread.start()
-    bot_thread.join()
+    schedule_thread = threading.Thread(target=loop.create_task, args=(start_scheduling(),))
+    schedule_thread.start()
+    schedule_thread.join()
+
+    # bot_thread = threading.Thread(target=asyncio.run, args=(run_bot(),))
+    # bot_thread.start()
+    # bot_thread.join()
+
+    loop.run_forever()
 
 
 if __name__ == "__main__":
