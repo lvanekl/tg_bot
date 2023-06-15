@@ -5,6 +5,7 @@ import random
 import asyncio
 import logging
 import openai
+import threading
 
 from db.db_class import DB
 from env import openai_token, LOG_PATH
@@ -18,10 +19,14 @@ logging.basicConfig(level=logging.DEBUG, filename=LOG_PATH, filemode="w",
 default_prompt = '''Я занимаюсь в спортсекции и я провожу голосование о сегодняшней тренировке, 
 чтобы люди могли отметить планируют ли они сегодня прийти. По смыслу варианты ответа следующие: да, нет, не знаю. 
 Твоя задача придумать вопрос и замены этим вариантам ответов, чтобы опросы не были однообразными. Атмосфера дружеская и в чате приветствуются подколы вплоть до самых жестких. 
-Нужны варианты ответов в максимально шутливой форме - выдавай самые абсурдные и абстрактные варианты. Как можно меньше пафоса.
-. Я хочу получить ответ в формате json:
+Нужны варианты ответов в максимально шутливой форме - выдавай самые абсурдные и абстрактные варианты. Как можно меньше пафоса. Я хочу получить ответ в формате json:
 {"question": ["", "", ""], "yes": ["", "", ""], "maybe": ["", "", ""], "no": ["", "", ""], ]}. 
 Вот тебе примеры хороших вариантов,  {
+  "question": [
+    "Собираешься засиять на тренировке сегодня?",
+    "Какие планы на вечер?",
+    "Как насчет тренировочки сегодня?"
+  ],
   "yes": [
     "Я приду и покажу всем, как сделать отжимание на одной руке, держа бутерброд в другой",
     "Да, сегодня я буду участвовать в спортивной эпопее!",
@@ -42,11 +47,12 @@ default_prompt = '''Я занимаюсь в спортсекции и я про
 }
 
 НО ИХ ТЕБЕ КОПИРОВАТЬ НЕЛЬЗЯ. Придумай сам, мне нужны именно новые варианты ответов
-Обязательно сделай перепроверку на грамматические, фактические и речевые ошибки.'''
+Обязательно сделай перепроверку на грамматические, фактические и речевые ошибки. 
+Также проверь, чтобы в ответе не было пустых строк ('')'''
 
 
 async def generate_poll(telegram_chat_id: int, chat_settings: dict, training: dict, my_db: DB) -> dict:
-    print('hehehe')
+    print('started_generating_poll')
     date, time, gym, sport = training['date'], training['time'], training['gym'], training['sport']
 
     funny_question, funny_yes_option, funny_maybe_option, funny_no_option, emoji = \
@@ -55,7 +61,8 @@ async def generate_poll(telegram_chat_id: int, chat_settings: dict, training: di
 
     if any([funny_question, funny_yes_option, funny_maybe_option, funny_no_option]):
         loop = asyncio.get_event_loop()
-        poll_variants = generate_poll_variants_using_chat_GPT(date, time, gym, sport, chat_settings)
+        poll_variants = await generate_poll_variants_using_chat_GPT(date=date, time=time, gym=gym,
+                                                                    chat_settings=chat_settings, sport=sport)
         try:
             poll_variants = eval(poll_variants)
         except Exception as e:
@@ -87,7 +94,8 @@ async def generate_poll(telegram_chat_id: int, chat_settings: dict, training: di
     return poll
 
 
-def generate_poll_variants_using_chat_GPT(date: Date, time: Time, gym: str, chat_settings: dict, sport: str = "любой") -> str:
+async def generate_poll_variants_using_chat_GPT(date: Date, time: Time, gym: str, chat_settings: dict,
+                                                sport: str = "любой") -> str:
     prompt = default_prompt
     if sport is not None:
         prompt += f". ВАЖНО: вид спорта - {sport}, поэтому не используй другие виды спорта в генерации. " \

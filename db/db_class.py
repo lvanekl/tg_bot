@@ -6,7 +6,8 @@ from datetime import time as Time, date as Date, datetime as Datetime
 
 from env import DEFAULT_WELCOME_MEME_PATH, DEFAULT_CHAT_FUNNY_QUESTION_FLAG, \
     DEFAULT_CHAT_FUNNY_YES_FLAG, DEFAULT_CHAT_FUNNY_MAYBE_FLAG, DEFAULT_CHAT_FUNNY_NO_FLAG, \
-    DEFAULT_AUTO_POLL_FLAG, DEFAULT_POLL_SEND_TIME, LOG_PATH, DEFAULT_CHAT_EMOJI_FLAG, DEFAULT_LANGUAGE
+    DEFAULT_AUTO_POLL_FLAG, DEFAULT_POLL_SEND_TIME, LOG_PATH, DEFAULT_CHAT_EMOJI_FLAG, DEFAULT_LANGUAGE, \
+    DEFAULT_EVERYONE_IS_ADMIN
 
 logging.basicConfig(level=logging.INFO, filename=LOG_PATH, filemode="w",
                     format="%(asctime)s %(levelname)s %(message)s", encoding='utf-8')
@@ -116,8 +117,9 @@ class DbTableManager:
     	"funny_no"	INTEGER DEFAULT "{DEFAULT_CHAT_FUNNY_NO_FLAG}",
     	"funny_maybe"	INTEGER DEFAULT "{DEFAULT_CHAT_FUNNY_MAYBE_FLAG}",
     	"poll_send_time" TEXT DEFAULT "{DEFAULT_POLL_SEND_TIME}",
-    	"emoji" TEXT DEFAULT "{DEFAULT_CHAT_EMOJI_FLAG}",
-    	"language" TEXT DEFAULT "{DEFAULT_LANGUAGE}",
+    	"emoji" INTEGER DEFAULT "{DEFAULT_CHAT_EMOJI_FLAG}",
+    	"language" INTEGER DEFAULT "{DEFAULT_LANGUAGE}",
+    	"everyone_is_admin" INTEGER DEFAULT "{DEFAULT_EVERYONE_IS_ADMIN}",
     	FOREIGN KEY("chat") REFERENCES "chat"("telegram_chat_id") ON DELETE CASCADE
     )''',
         "gym": '''CREATE TABLE IF NOT EXISTS "gym" (

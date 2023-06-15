@@ -14,18 +14,12 @@ logging.basicConfig(level=logging.DEBUG, filename=LOG_PATH, filemode="w",
 
 
 async def main():
-    # loop = asyncio.get_event_loop()
-
-    # schedule_thread = threading.Thread(target=asyncio.run, args=(my_sch.start_scheduling(),))
-    # schedule_thread.start()
-    # schedule_thread.join()
     my_sch = MyScheduleClass(db_path=DB_PATH)
     my_bot = MyBot(db_path=DB_PATH)
 
     my_sch.start_scheduling()
     try:
         my_sch.scheduler.start()
-        # await my_bot.run_bot()
         await my_bot.dp.start_polling()
 
     except Exception as e:
@@ -33,7 +27,4 @@ async def main():
 
 
 if __name__ == '__main__':
-    # try:
     asyncio.run(main())
-    # except (KeyboardInterrupt, SystemExit):
-    #     logger.error("Bot stopped!")

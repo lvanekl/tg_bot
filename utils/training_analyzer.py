@@ -1,6 +1,4 @@
 from db.db_class import DB
-from env import DB_PATH
-from testing.some_testing_utils import load_test_data
 from datetime import time as Time, date as Date
 
 
