@@ -8,12 +8,12 @@ import openai
 import threading
 
 from db.db_class import DB
-from env import openai_token, LOG_PATH
+from env import openai_token, LOG_PATH, LOGGING_LEVEL
 from datetime import date as Date, time as Time
 
 openai.api_key = openai_token
 
-logging.basicConfig(level=logging.DEBUG, filename=LOG_PATH, filemode="w",
+logging.basicConfig(level=LOGGING_LEVEL, filename=LOG_PATH, filemode="w",
                     format="%(asctime)s %(levelname)s %(message)s", encoding='utf-8')
 
 default_prompt = '''Я занимаюсь в спортсекции и я провожу голосование о сегодняшней тренировке, 

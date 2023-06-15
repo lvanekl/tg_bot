@@ -1,18 +1,16 @@
-import time
-
 import asyncio
 import logging
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-from bot.bot_main_file import MyBot
+from bot.create_bot import my_bot
 from db.db_class import DB
 from utils.poll_generation import generate_poll
 from utils.training_analyzer import analyze_schedule_today, clear_expired_schedule_corrections
-from env import LOG_PATH, SCHEDULE_CHECK_RUN_TIME, DEFAULT_POLL_SEND_TIME
+from env import LOG_PATH, SCHEDULE_CHECK_RUN_TIME, DEFAULT_POLL_SEND_TIME, LOGGING_LEVEL
 
-from datetime import time as Time, datetime as Datetime, timedelta
+from datetime import time as Time, datetime as Datetime
 
-logging.basicConfig(level=logging.INFO, filename=LOG_PATH, filemode="w",
+logging.basicConfig(level=LOGGING_LEVEL, filename=LOG_PATH, filemode="w",
                     format="%(asctime)s %(levelname)s %(message)s", encoding='utf-8')
 
 
@@ -24,7 +22,7 @@ class MyScheduleClass:
         self.scheduler = AsyncIOScheduler(timezone="Europe/Moscow")
         self.my_db = DB(db_path)
         self.loop = asyncio.get_event_loop()
-        self.my_bot = MyBot(db_path=db_path)
+        self.my_bot = my_bot
 
     def start_scheduling(self):
         self.scheduler.add_job(self.everyday_schedule_analyzer, trigger='cron',

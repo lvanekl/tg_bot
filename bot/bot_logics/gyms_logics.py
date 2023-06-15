@@ -1,12 +1,15 @@
 import logging
 from aiogram import types
 
-from env import LOG_PATH, BOT_USERNAME
+from env import LOG_PATH, BOT_USERNAME, LOGGING_LEVEL
 
 from bot.permissions import has_permission
 
-logging.basicConfig(level=logging.INFO, filename=LOG_PATH, filemode="w",
+logging.basicConfig(level=LOGGING_LEVEL, filename=LOG_PATH, filemode="w",
                     format="%(asctime)s %(levelname)s %(message)s", encoding='utf-8')
+
+logging.info('importing gyms logics')
+print('aaaaaaaa')
 
 
 class GymsLogics:
@@ -15,7 +18,6 @@ class GymsLogics:
     def register_gym_logics_routes(self):
         self.dp.register_message_handler(self.gyms_logics_router,
                                          commands=self.gym_commands)
-
 
     async def gyms_logics_router(self, message: types.Message):
         funcs = {"get_gyms": self.get_gyms,  # TODO отформатировать вывод

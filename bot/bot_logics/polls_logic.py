@@ -1,9 +1,9 @@
 import logging
 from aiogram import types
 
-from env import LOG_PATH
+from env import LOG_PATH, LOGGING_LEVEL
 
-logging.basicConfig(level=logging.INFO, filename=LOG_PATH, filemode="w",
+logging.basicConfig(level=LOGGING_LEVEL, filename=LOG_PATH, filemode="w",
                     format="%(asctime)s %(levelname)s %(message)s", encoding='utf-8')
 
 

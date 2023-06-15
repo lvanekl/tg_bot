@@ -1,7 +1,12 @@
 from aiogram import types, Bot
 
 from db.db_class import DB
-from env import DEVELOPER_TELEGRAM_ID
+from env import DEVELOPER_TELEGRAM_ID, LOGGING_LEVEL, LOG_PATH
+
+import logging
+
+logging.basicConfig(level=LOGGING_LEVEL, filename=LOG_PATH, filemode="w",
+                    format="%(asctime)s %(levelname)s %(message)s", encoding='utf-8')
 
 permission_denied_message = f'''Похоже у вас нет доступа к этой функции. Доступ может появиться, если
 1) Вас назначат админом чата (через настрйоки чата)

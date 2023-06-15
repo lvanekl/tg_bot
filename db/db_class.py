@@ -7,9 +7,9 @@ from datetime import time as Time, date as Date, datetime as Datetime
 from env import DEFAULT_WELCOME_MEME_PATH, DEFAULT_CHAT_FUNNY_QUESTION_FLAG, \
     DEFAULT_CHAT_FUNNY_YES_FLAG, DEFAULT_CHAT_FUNNY_MAYBE_FLAG, DEFAULT_CHAT_FUNNY_NO_FLAG, \
     DEFAULT_AUTO_POLL_FLAG, DEFAULT_POLL_SEND_TIME, LOG_PATH, DEFAULT_CHAT_EMOJI_FLAG, DEFAULT_LANGUAGE, \
-    DEFAULT_EVERYONE_IS_ADMIN
+    DEFAULT_EVERYONE_IS_ADMIN, LOGGING_LEVEL
 
-logging.basicConfig(level=logging.INFO, filename=LOG_PATH, filemode="w",
+logging.basicConfig(level=LOGGING_LEVEL, filename=LOG_PATH, filemode="w",
                     format="%(asctime)s %(levelname)s %(message)s", encoding='utf-8')
 
 def dict_factory(cursor, row):
@@ -473,7 +473,7 @@ class DbAdminManager:
     @connect_to_db_async
     async def remove_admin(self, telegram_chat_id: int, telegram_user_id: int) -> tuple:
         await self.cur_a.execute('''DELETE FROM "admin" WHERE "chat" = ? AND "telegram_user_id" = ?''',
-                                 telegram_chat_id, telegram_user_id)
+                                 (telegram_chat_id, telegram_user_id))
         return None, {"status": "success", "detail": "Админ удален"}
 
 
